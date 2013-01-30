@@ -15,8 +15,7 @@ body{
 	width:100%;
 	height: 80px;
 	padding: 20px;
-	background-color: #313554;
-	vertical-align: middle;
+	background-color: #313554; 
 	
 	-webkit-box-shadow: inset 0px -3px 8px #000;
 	box-shadow: inset 0px -3px 8px #000;
