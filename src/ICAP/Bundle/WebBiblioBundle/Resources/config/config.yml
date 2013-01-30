@@ -1,1 +1,6 @@
-config.yml
+idci_exporter:
+    entities:
+        "ICAP\\Bundle\\WebBiblioBundle\\Entity\\WebLink":
+            formats:
+                jsonp:
+                    template_name_format: "export.json.twig"
