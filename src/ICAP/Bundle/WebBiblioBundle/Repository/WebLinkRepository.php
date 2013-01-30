@@ -12,29 +12,29 @@ use Doctrine\ORM\EntityRepository;
  */
 class WebLinkRepository extends EntityRepository
 {
-    const TAGNAMES_PROPERTY = "tagNames";
-    const USERNAME_PROPERTY = "username";
-    const URL_PROPERTY = "url";
+    const TAGNAMES_PROPERTY = "tagnames";
+    const USERNAME_PROPERTY = "usernames";
+    const ENTITY_PROPERTIES = Array("url");
 
     public function customSearch($params)
     {
-        $qb = $this.getPublishedWebLinksQueryBuilder();
+        $qb = $this->getPublishedWebLinksQueryBuilder();
         foreach ($params as $key => $value) {
-            if($key == TAGNAMES_PROPERTY){
+            if($key == self::TAGNAMES_PROPERTY){
                 $qb
                     ->leftJoin('weblink.tags', 'tag')
                     ->andWhere(
                         $qb
                             ->expr()
-                            ->in('tag.name', implode(",", $value)
+                            ->in('tag.name', $value)
                     )
                 ;
-            }else if($key == USERNAME_PROPERTY){
+            }else if($key == self::USERNAME_PROPERTY){
                 $qb
                     ->andWhere(
                         $qb
                             ->expr()
-                            ->in('weblink.username', implode(",", $value)
+                            ->in('weblink.username', $value)
                     )
                 ;
             } else if(isValidProperty($key)){
@@ -59,21 +59,19 @@ class WebLinkRepository extends EntityRepository
         ;
     }
 
-    public function getPublishedebLinksQuery()
+    public function getPublishedWebLinksQuery()
     {
         return $this->getPublishedWebLinksQueryBuilder()->getQuery();
-
     }
 
     public function getPublishedWebLinks()
     {
         return $this->getPublishedWebLinksQuery()->getResults();
-
     }
 
     private function isValidProperty($param)
     {
-        if($param == URL_PROPERTY){
+        if(in_array($param, self::ENTITY_PROPERTIES)){
             return true;
         }
 
