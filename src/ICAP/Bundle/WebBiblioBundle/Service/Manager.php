@@ -120,7 +120,7 @@ class Manager
     public function publishWebLink($webLink, $published)
     {
         if($webLink) {
-            $webLink.setPublished($published);
+            $webLink->setPublished($published);
             $this->getEntityManager()->flush();
         }
     }
@@ -173,7 +173,7 @@ class Manager
             $webLink = $notPersistedWebLink;
         }else {
             //Publish state managment
-            $webLink.setPublished($notPersistedWebLink.getPublished());
+            $webLink->setPublished($notPersistedWebLink->getPublished());
 
             //Add new tags
             foreach ($notPersistedWebLink->getTags() as $notPersistedTag) {
