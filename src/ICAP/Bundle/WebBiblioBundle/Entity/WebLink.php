@@ -139,14 +139,33 @@ class WebLink
     /**
      * Add tags
      *
-     * @param \ICAP\Bundle\WebBiblioBundle\Entity\Tag $tags
+     * @param \ICAP\Bundle\WebBiblioBundle\Entity\Tag $tag
      * @return WebLink
      */
-    public function addTag(\ICAP\Bundle\WebBiblioBundle\Entity\Tag $tags)
+    public function addTag(\ICAP\Bundle\WebBiblioBundle\Entity\Tag $tag)
     {
-        $this->tags[] = $tags;
+        if(!$this->hasTag($tag)) {
+            $this->tags[] = $tag;
+        }
     
         return $this;
+    }
+
+    /**
+     * Has tags
+     *
+     * @param \ICAP\Bundle\WebBiblioBundle\Entity\Tag $tag
+     * @return boolean
+     */
+    public function hasTag(\ICAP\Bundle\WebBiblioBundle\Entity\Tag $tag)
+    {
+        foreach ($this->tags as $current) {
+            if($current->getName() == $tag->getName()) {
+                return true;
+            }
+        }
+    
+        return false;
     }
 
     /**
