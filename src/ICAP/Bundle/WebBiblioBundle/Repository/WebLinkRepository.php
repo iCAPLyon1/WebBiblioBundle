@@ -46,7 +46,7 @@ class WebLinkRepository extends EntityRepository
     {
         return $this
             ->createQueryBuilder('weblink')
-            ->andWhere('weblink.published = ":value"')
+            ->andWhere('weblink.published = :value')
             ->setParameter('value', true)
             ->orderBy('weblink.url', 'ASC')
         ;
