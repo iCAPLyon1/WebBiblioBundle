@@ -167,7 +167,7 @@ class Manager
     {
         $webLink = $this->getWebLinkRepository()->findOneBy(array(
                 'url' => $notPersistedWebLink->getUrl(), 
-                'username' => $notPersistedWebLink->getUsername()),
+                'username' => $notPersistedWebLink->getUsername())
         );
         if(!$webLink) {
             $webLink = $notPersistedWebLink;
