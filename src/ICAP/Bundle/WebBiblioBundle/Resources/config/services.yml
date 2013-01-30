@@ -1,0 +1,4 @@
+services: 
+    icap_webbiblio.manager: 
+        class: ICAP\Bundle\WebBiblioBundle\Service\Manager
+        arguments: [@doctrine.orm.entity_manager]
