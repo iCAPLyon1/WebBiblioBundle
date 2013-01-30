@@ -23,9 +23,7 @@ class FrontController extends Controller
     {
         //Displays the page with all necessary fields (form for email, url and weblink creation)
 
-        //$weblinks = $this->get("icap_webbiblio.manager")->getList();
-
-        $weblinks = $this->getDoctrine()->getEntityManager()->getRepository('ICAPWebBiblioBundle:WebLink')->findAll();
+        $weblinks = $this->get("icap_webbiblio.manager")->getList();
 
         $form = $this->createForm(new WebLinkType());
 
@@ -50,7 +48,7 @@ class FrontController extends Controller
         $form->bind($request);
 
         if ($form->isValid()) {
-            // perform some action, such as saving the task to the database
+            $weblinks = $this->get("icap_webbiblio.manager")->updateWebLink($weblink);
             die("OK!");
 
             return $this->redirect($this->generateUrl('task_success'));
@@ -79,7 +77,7 @@ class FrontController extends Controller
                 'No register found for id '.$id
             );
         }else{
-            //Call service to delete object
+            $weblinks = $this->get("icap_webbiblio.manager")->removeWebLink($weblink);
             die("Delete ok!");
         }
         
@@ -103,7 +101,7 @@ class FrontController extends Controller
                 'No register found for id '.$id
             );
         }else{
-            //Call service to publish object
+            $weblinks = $this->get("icap_webbiblio.manager")->publishWebLink($weblink, true);
             die("Publish ok!");
         }
 
@@ -127,7 +125,7 @@ class FrontController extends Controller
                 'No register found for id '.$id
             );
         }else{
-            //Call service to delete object
+            $weblinks = $this->get("icap_webbiblio.manager")->publishWebLink($weblink, false);
             die("Unpublish ok!");
         }
         
