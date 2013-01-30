@@ -149,7 +149,8 @@ class WebLink
         return $this;
     }
 
-     /**
+    /**
+     * TODO: Move this code to formTransformer
      * Set tags
      *
      * @param String $tags
@@ -160,8 +161,7 @@ class WebLink
         $tags = explode(",", $tagNames);
         foreach($tags as $tagName){
             $tag = new Tag();
-            $tagName = trim($tagName);
-            $tag->setName($tagName);
+            $tag->setName(trim($tagName));
             $this->addTag($tag);
         }
 

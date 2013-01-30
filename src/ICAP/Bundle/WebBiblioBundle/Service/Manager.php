@@ -21,12 +21,12 @@ class Manager
 
     protected function getWebLinkRepository()
     {
-        return $this->getEntityManager()->getRepository('WebLink');
+        return $this->getEntityManager()->getRepository('ICAPWebBiblioBundle:WebLink');
     }
 
     protected function getTagRepository()
     {
-        return $this->getEntityManager()->getRepository('Tag');
+        return $this->getEntityManager()->getRepository('ICAPWebBiblioBundle:Tag');
     }
 
     /**
