@@ -1,0 +1,10 @@
+<weblink id="{{ entity.id }}">
+  <username>{{ entity.username }}</username>
+  <url>{{ entity.url|url_encode() }}</url>
+  <published>{{ entity.published }}</published>
+  <tags>
+    {% for tag in entity.tags %}
+        <tag id="{{ tag.id }}">{{ tag.name }}</tag>
+    {% endfor %}
+  </tags>
+</location>

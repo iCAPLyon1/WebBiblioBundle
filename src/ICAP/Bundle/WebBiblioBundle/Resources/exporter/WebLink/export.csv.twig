@@ -1,0 +1,19 @@
+{% set enclosure = '"' %}
+{% set delimiter = ';' %}
+{% set tag_delimiter = ',' %}
+
+{% autoescape false %}
+{% spaceless %}
+
+{{ enclosure }}{{ entity.id }}{{ enclosure }}{{ delimiter }}
+{{ enclosure }}{{ entity.username }}{{ enclosure }}{{ delimiter }}
+{{ enclosure }}{{ entity.url|url_encode() }}{{ enclosure }}{{ delimiter }}
+{{ enclosure }}{{ entity.published }}{{ enclosure }}{{ delimiter }}
+{{ enclosure }}
+    {% for tag in entity.tags %}
+        {{tag.name}}{{tag_delimiter}}
+    {% endfor %}
+{{ enclosure }}{{ delimiter }}
+
+{% endspaceless %}
+{% endautoescape %}

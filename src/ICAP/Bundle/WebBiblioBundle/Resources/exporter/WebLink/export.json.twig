@@ -1,0 +1,14 @@
+{
+    "id": "{{ entity.id }}",
+    "username": "{{ entity.username }}",
+    "url": "{{ entity.url|url_encode() }}",
+    "published": "{{ entity.published }}",
+    "tags": [
+        {% for tag in entity.tags %}
+            {
+                "id": "{{ tag.id }}" , 
+                "name" : "{{ tag.name }}"
+            } {% if not loop.last %} , {% endif %}
+        {% endfor %}
+    ]
+}
