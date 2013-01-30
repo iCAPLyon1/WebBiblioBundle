@@ -25,7 +25,7 @@ class FrontController extends Controller
 
         //$weblinks = $this->get("icap_webbiblio.manager")->getList();
 
-        $weblinks = $this->getEntityManager()->getRepository('ICAPWebBiblioBundle:WebLink')->findAll();
+        $weblinks = $this->getDoctrine()->getEntityManager()->getRepository('ICAPWebBiblioBundle:WebLink')->findAll();
 
         $form = $this->createForm(new WebLinkType());
 
