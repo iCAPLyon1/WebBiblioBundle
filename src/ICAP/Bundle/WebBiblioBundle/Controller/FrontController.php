@@ -22,9 +22,17 @@ class FrontController extends Controller
     public function indexAction()
     {
         //Displays the page with all necessary fields (form for email, url and weblink creation)
+
+        //$weblinks = $this->get("icap_webbiblio.manager")->getList();
+
+        $weblinks = $this->getDoctrine()->getEntityManager()->getRepository('ICAPWebBiblioBundle:WebLink')->findAll();
+
         $form = $this->createForm(new WebLinkType());
 
-        return array('form' => $form->createView());
+        return array(
+            'form' => $form->createView(),
+            'weblinks' => $weblinks,
+        );
     }
 
     /**
