@@ -1,18 +1,15 @@
-{% extends "::base.html.twig" %}
+{% extends "ICAPWebBiblioBundle::base.html.twig" %}
 
-{% block title %}
-Web Bibliography
-{% endblock %}
+{% block title %}WebBiblio{% endblock %}
 
 {% block body %}
-<div>
-</div>
-<div>
-    <ul>
-        <li><a href="#"></a></li>
-        <li><a href="#"></a></li>
-        <li><a href="#"></a></li>
-        <li><a href="#"></a></li>
-    </ul>
-</div>
+	
+	<div class="header">
+		<span class="title">WebBiblio<small>(theque)</x-small></span>
+	</div>
+	
+	
+	{% include 'ICAPWebBiblioBundle:Front:list.html.twig' %}
+	{% include 'ICAPWebBiblioBundle:Front:form.html.twig' %}
+	
 {% endblock %}
