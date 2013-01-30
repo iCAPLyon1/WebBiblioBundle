@@ -11,12 +11,12 @@ class Manager
 
     public function __construct($em)
     {
-        $this->$em = $em;
+        $this->em = $em;
     }
 
     protected function getEntityManager()
     {
-        return $this->$em;
+        return $this->em;
     }
 
     protected function getWebLinkRepository()
@@ -52,25 +52,15 @@ class Manager
      * @param string $name the tag's name
      * @return Tag 
      */
-    protected function createTag()
+    protected function createTag($name)
     {
         // Create and persist a tag
         $tag = new Tag();
         $tag->setName($name);
 
         $this->getEntityManager()->persist($webLink);
-        return $tag;
-    }
 
-    /**
-     * Add a tag to a webLink
-     * @param Tag $tag Tag to add to the WebLink
-     * @param WebLink $webLink the webLink to update
-     * @return void
-     */
-    protected function addTagToWebLink($tag, $webLink) {
-        $webLink->addTag($tag);
-        $tag->addWebLink($webLink);
+        return $tag;
     }
 
     /**
@@ -102,23 +92,37 @@ class Manager
             $tags[] = $tag;
         }
         $this->add($webLink, $tags);
+
+        $this->getEntityManager()->flush();
     }
 
     /**
-     * Take a WebLink
-     * For each tag in tags
-     * Add the Tag to the WebLink
+     * Publish or unpublish a webLink by id
      *
-     * @param WebLink $webLink the webLink to update
-     * @param array $tags Tags to add to the WebLink
+     * @param int $id the webLink's id to update
+     * @param boolean $published indicates whether the resource is published or not
      * @return void
      */
-    public function add($webLink, $tags) 
+    public function publishWebLinkById($id, $published)
     {
-        foreach ($tags as $tag) {
-            $this->addTagToWebLink($tag, $webLink);
+        $webLink = $this->getWebLinkRepository()->findOne($id);
+        $this->publishWebLink($weblink, $published);
+    }
+
+
+    /**
+     * Publish or unpublish a webLink
+     *
+     * @param WebLink $webLink a persisted webLink
+     * @param boolean $published indicates whether the resource is published or not
+     * @return void
+     */
+    public function publishWebLink($webLink, $published)
+    {
+        if($webLink) {
+            $webLink.setPublished($published);
+            $this->getEntityManager()->flush();
         }
-        $this->getEntityManager()->flush();
     }
 
     /**
@@ -128,60 +132,77 @@ class Manager
      * @param int $id the webLink's id to remove
      * @return void
      */
-    public function removeById($webLink)
+    public function removeWebLinkById($webLink)
     {
         $webLink = $this->getWebLinkRepository()->findOne($id);
-        $this->remove($webLink);
+        $this->removeWebLink($webLink);
     }
 
     /**
      * Delete a WebLink
      * Do not Delete orphan Tag. See Later for a chron/deamon cleaner
      *
-     * @param WebLink $webLink the webLink to remove
+     * @param WebLink $webLink the persisted webLink to remove
      * @return void
      */
-    public function remove($webLink)
+    public function removeWebLink($webLink)
     {
-        $this->getEntityManager()->remove($webLink);
-        $this->getEntityManager()->flush();
+        if($webLink) {
+            $this->getEntityManager()->remove($webLink);
+            $this->getEntityManager()->flush();
+        }
     }
 
     /**
-     * Publish or unpublish a webLink by id
+     * Update a weblink object :
+     *      - create if not present
+     *      - update if present :
+     *          - update published state
+     *          - add tag in persisted object
      *
-     * @param int $id the webLink's id to update
-     * @param boolean $visible indicates whether the resource is published or not
+     * @param WebLink $notPersistedWebLink webLink Object which wasn't 
      * @return void
      */
-    public function publishById($id, $visible)
+    public function updateWebLink($notPersistedWebLink)
     {
-        $webLink = $this->getWebLinkRepository()->findOne($id);
-        $this->publish($webLink);
-    }
+        $webLink = $this->getWebLinkRepository()->findOneBy(array(
+                'url' => $notPersistedWebLink->getUrl(), 
+                'username' => $notPersistedWebLink->getUsername()),
+        );
+        if(!$webLink) {
+            $webLink = $notPersistedWebLink;
+        }else {
+            //Publish state managment
+            $webLink.setPublished($notPersistedWebLink.getPublished());
 
-    /**
-     * Publish or unpublish a webLink
-     *
-     * @param WebLink $webLink the webLink to update
-     * @param boolean $visible indicates whether the resource is published or not
-     * @return void
-     */
-    public function publish($webLink, $visible)
-    {
-        $webLink->setPublished($visible);
+            //Add new tags
+            foreach ($notPersistedWebLink->getTags() as $notPersistedTag) {
+                $tag = $this->getTagRepository()->findOneBy(array('name' => $notPersistedTag->getName()));
+                if(!$tag) {
+                    $tag = $notPersistedTag;
+                    $this->getEntityManager()->persist($tag);
+                }
+                $webLink->addTag($tag);
+            }
+        } 
+        $this->getEntityManager()->persist($webLink);
         $this->getEntityManager()->flush();
     }
 
     /**
      * Retrieve all WebLinks for a username (publish or not)
+     * If username was null retrieve all webLinks. 
      *
      * @param string $username identifier for a user
      * @return WebLink's array
      */
     public function getList($username) 
     {
-        return $this->getWebLinkRepository()->findBy(array('username' => $username));
+        if($username) {
+            return $this->getWebLinkRepository()->findBy(array('username' => $username));
+        }else {
+            return $this->getWebLinkRepository()->findAll();
+        }
     }
 
     /**
