@@ -23,7 +23,7 @@ class Tag
     protected $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity="ICAP\Bundle\WebBiblioBundle\Entity\WebLink", mappedBy="webLinks")
+     * @ORM\ManyToMany(targetEntity="ICAP\Bundle\WebBiblioBundle\Entity\WebLink", mappedBy="tags")
      */
     protected $webLinks;
 
