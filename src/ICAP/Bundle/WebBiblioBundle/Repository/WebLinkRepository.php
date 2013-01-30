@@ -14,7 +14,6 @@ class WebLinkRepository extends EntityRepository
 {
     const TAGNAMES_PROPERTY = "tagnames";
     const USERNAME_PROPERTY = "usernames";
-    const ENTITY_PROPERTIES = Array("url");
 
     public function customSearch($params)
     {
@@ -37,13 +36,7 @@ class WebLinkRepository extends EntityRepository
                             ->in('weblink.username', $value)
                     )
                 ;
-            } else if(isValidProperty($key)){
-                $qb
-                    ->andWhere('weblink.:key = ":value"')
-                    ->setParameter('key', $key)
-                    ->setParameter('value', $value)
-                ;
-            }
+            } 
         }
 
         return $qb->getQuery()->getResult();
@@ -67,15 +60,6 @@ class WebLinkRepository extends EntityRepository
     public function getPublishedWebLinks()
     {
         return $this->getPublishedWebLinksQuery()->getResults();
-    }
-
-    private function isValidProperty($param)
-    {
-        if(in_array($param, self::ENTITY_PROPERTIES)){
-            return true;
-        }
-
-        return false;
     }
 
 }
