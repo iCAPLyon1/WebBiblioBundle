@@ -149,6 +149,25 @@ class WebLink
         return $this;
     }
 
+     /**
+     * Set tags
+     *
+     * @param String $tags
+     * @return WebLink
+     */
+    public function setTags($tagNames)
+    {
+        $tags = explode(",", $tagNames);
+        foreach($tags as $tagName){
+            $tag = new Tag();
+            $tagName = trim($tagName);
+            $tag->setName($tagName);
+            $this->addTag($tag);
+        }
+
+        return $this;
+    }
+
     /**
      * Remove tags
      *
