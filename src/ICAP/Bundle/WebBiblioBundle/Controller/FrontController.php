@@ -23,7 +23,7 @@ class FrontController extends Controller
     {
         //Displays the page with all necessary fields (form for email, url and weblink creation)
 
-        $weblinks = $this->get("icap_webbiblio.manager")->getList();
+        $weblinks = $this->get("icap_webbiblio.manager")->getList(null);
 
         $form = $this->createForm(new WebLinkType());
 

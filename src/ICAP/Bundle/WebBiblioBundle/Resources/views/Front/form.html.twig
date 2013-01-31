@@ -1,4 +1,10 @@
-<form method="POST" action="{{ path("web_biblio_add") }}">
-	{{ form_widget(form) }}
-	<input type="submit" value="Submit" />
-</form>
+<div class="addNewWeblinkBlock">
+
+
+    <div class="addHeader">Here you can create a new weblink:</div>
+    
+    <form method="POST" action="{{ path("web_biblio_add") }}">
+        {{ form_widget(form) }}
+        <input type="submit" value="Submit" />
+    </form>
+</div>
