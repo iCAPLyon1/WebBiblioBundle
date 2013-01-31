@@ -19,41 +19,79 @@ class FrontController extends Controller
      * @Route("/", name="web_biblio_index")
      * @Template()
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        //Displays the page with all necessary fields (form for email, url and weblink creation)
+        if($request->hasPreviousSession()) {
+           $username = $request->getSession()->get('icap_webbiblio_username'); 
+       }
 
-        $weblinks = $this->get("icap_webbiblio.manager")->getList(null);
-
-        $form = $this->createForm(new WebLinkType());
-
-        return array(
-            'form' => $form->createView(),
-            'weblinks' => $weblinks,
-        );
+        if($username) {
+            return $this->redirect($this->generateUrl('web_biblio_userlist'));
+        }else {
+            return array();
+        }
     }
 
     /**
      * @Route("/userlist", name="web_biblio_userlist")
      * @Template()
      */
-    public function userListAction()
+    public function userlistAction(Request $request)
     {
-        //Displays the page with all necessary fields (form for email, url and weblink creation)
+        $username = null;
+        if($request->hasPreviousSession()) {
+           $username = $request->getSession()->get('icap_webbiblio_username'); 
+        }
 
-        $weblinks = $this->get("icap_webbiblio.manager")->getList();
+        if($username) {
+            $weblinks = $this->get("icap_webbiblio.manager")->getList($username);
+            $form = $this->createForm(new WebLinkType());
 
-        $form = $this->createForm(new WebLinkType());
+            return array(
+                'form' => $form->createView(),
+                'weblinks' => $weblinks,
+                'username' => $username
+            );
+        }else {
 
-        return array(
-            'form' => $form->createView(),
-            'weblinks' => $weblinks,
-        );
+            return $this->redirect($this->generateUrl('web_biblio_index'));
+        }
+    }
+
+    /**
+     * "Connect" a user with his username : add a http session "username" variable
+     *
+     * @Route("/connect", name="web_biblio_connect")
+     * @Method({"POST"})
+     * @Template()
+     */
+    public function connectAction(Request $request)
+    {
+        $username = $request->request->get('username');
+        $request->getSession()->set('icap_webbiblio_username', $username);
+
+        return $this->redirect($this->generateUrl('web_biblio_index'));
+    }
+
+    /**
+     * "Disconnect" a user with his username : remove http session "username" variable
+     *
+     * @Route("/disconnect", name="web_biblio_disconnect")
+     * @Method({"POST"})
+     * @Template()
+     */
+    public function disconnectAction(Request $request)
+    {
+        if($request->hasPreviousSession()) {
+           $username = $request->getSession()->remove('icap_webbiblio_username'); 
+        }
+
+        return $this->redirect($this->generateUrl('web_biblio_index'));
     }
 
     /**
      * @Route("/add", name="web_biblio_add")
-     * @Method("POST")
+     * @Method({"POST"})
      * @Template()
      */
     public function addAction(Request $request)
@@ -80,7 +118,7 @@ class FrontController extends Controller
 
     /**
      * @Route("/remove/{id}", requirements={"id" = "\d+"}, name="web_biblio_remove")
-     * @Method("POST, DELETE")
+     * @Method({"POST, DELETE"})
      * @Template()
      */
     public function removeAction($id)
@@ -104,7 +142,7 @@ class FrontController extends Controller
 
     /**
      * @Route("/publish/{id}", requirements={"id" = "\d+"}, name="web_biblio_publish")
-     * @Method("POST, PUT")
+     * @Method({"POST, PUT"})
      * @Template()
      */
     public function publishAction($id)
@@ -128,7 +166,7 @@ class FrontController extends Controller
 
     /**
      * @Route("/unpublish/{id}", requirements={"id" = "\d+"}, name="web_biblio_unpublish")
-     * @Method("POST, PUT")
+     * @Method({"POST, PUT"})
      * @Template()
      */
     public function unpublishAction($id)

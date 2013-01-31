@@ -1,11 +1,26 @@
 {% extends "::base.html.twig" %}
 
 {% block stylesheets %}
-<link rel="stylesheet" type="text/css" href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css"/>
-<link rel="stylesheet" type="text/css" href="{{ asset('bundles/icapwebbiblio/css/styles.css') }}"/>
-
+    <link rel="stylesheet" type="text/css" href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/icapwebbiblio/css/styles.css') }}"/>
 {% endblock %}
 
 {% block javascripts %}
-<script type="text/javascript" src="{{ asset('bundles/icapwebbiblio/js/script.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/icapwebbiblio/js/script.js') }}"></script>
+{% endblock %}
+
+{% block title %}WebBiblio{% endblock %}
+
+{% block body %}
+    {% block header %}
+        <div class="header">
+            <div class="title">WebBiblio<small>(theque)</small></div>
+        </div>
+    {% endblock %}
+
+    {% block content %}
+    {% endblock %}
+
+    {% block footer %}
+    {% endblock %}
 {% endblock %}

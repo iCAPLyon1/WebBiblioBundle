@@ -6,9 +6,12 @@
     {% if weblinks|length > 0 %}
     <ul>
         {% for weblink in weblinks %}
-            <li>{{ weblink.username }}
-            <span class="weblinkTags">[{% for tag in weblink.tags %} {{ tag.name }},{% endfor %}]</span><br />
-            <a href="#">{{ weblink.url }}</a>
+            <li><a href="#">{{ weblink.url }}</a>
+            <span class="weblinkTags">[
+                {% for tag in weblink.tags %} 
+                    {{ tag.name }}{% if not loop.last %},{% endif %}
+                {% endfor %}
+                ]</span><br/>
             </li>
         {% endfor %}
     </ul>
