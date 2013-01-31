@@ -34,6 +34,24 @@ class FrontController extends Controller
     }
 
     /**
+     * @Route("/userlist", name="web_biblio_userlist")
+     * @Template()
+     */
+    public function userListAction()
+    {
+        //Displays the page with all necessary fields (form for email, url and weblink creation)
+
+        $weblinks = $this->get("icap_webbiblio.manager")->getList();
+
+        $form = $this->createForm(new WebLinkType());
+
+        return array(
+            'form' => $form->createView(),
+            'weblinks' => $weblinks,
+        );
+    }
+
+    /**
      * @Route("/add", name="web_biblio_add")
      * @Method("POST")
      * @Template()

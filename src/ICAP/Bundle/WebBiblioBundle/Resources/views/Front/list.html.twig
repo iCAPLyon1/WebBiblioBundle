@@ -1,20 +1,19 @@
-
 <div class="weblinkListBlock">
-	
-	<span class="listHeader">Here you can find the list of your weblinks</span>
-		
-	<ul>
-	
-	{% if weblinks|length > 0 %}
+    
+    <span class="listHeader">Here you can find the list of your weblinks</span>
+        
+    <ul>
+    
+    {% if weblinks|length > 0 %}
     <ul>
         {% for weblink in weblinks %}
             <li>{{ weblink.username }}<br />
-			<a href="#">{{ weblink.url }}</a>
-			</li>
+            <a href="#">{{ weblink.url }}</a>
+            </li>
         {% endfor %}
     </ul>
-	{% else %}
-		Oupss! No weblinks yet !
-	{% endif %}
-	
+    {% else %}
+        Oupss! No weblinks yet !
+    {% endif %}
+    
 </div>
