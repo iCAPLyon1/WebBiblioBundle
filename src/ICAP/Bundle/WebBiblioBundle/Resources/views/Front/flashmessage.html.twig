@@ -1,0 +1,7 @@
+<div class="flashmessage">
+    {% if app.session %}
+        {% for key, flash in app.session.getFlashes() %}
+            <div class="{{key}}">{{ flash }}</div>
+        {% endfor %}
+    {% endif %}
+</div>

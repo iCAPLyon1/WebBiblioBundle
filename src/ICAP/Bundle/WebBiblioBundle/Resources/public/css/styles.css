@@ -24,6 +24,23 @@ body{
     /*font-weight: bold;*/
 }
 
+.flashmessage {
+    font-family: Arial;
+    font-size: 18pt;
+    line-height: 20pt;
+    text-shadow: 1px 1px 1px #AAA;
+}
+
+.icap_webbiblio_success {
+    margin: 25px;
+    color: green;
+}
+
+.icap_webbiblio_error {
+    margin: 25px;
+    color: red;
+}
+
 .weblinkListBlock {
     margin: 25px;
 }

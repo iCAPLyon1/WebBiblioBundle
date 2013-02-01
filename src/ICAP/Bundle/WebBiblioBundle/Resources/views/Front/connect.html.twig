@@ -1,7 +1,7 @@
 <div class="connectBlock">
-    <div class="connectHeader">You 're not logged.<br/> Please enter your username</div>
+    <div class="connectHeader">Please enter your username</div>
     <form method="POST" action="{{ path('web_biblio_connect') }}">
-        <input name="username"/> 
+        {{ form_widget(form) }}
         <input type="submit" value="Submit" />
     </form>
 </div>
