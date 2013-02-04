@@ -13,7 +13,9 @@ class WebLinkType extends AbstractType
         $builder
             ->add('url', 'url')
             //->add('username', 'email')
-            ->add('published')
+            ->add('published', 'checkbox', array(
+                'required'  => false,
+            ))
             ->add('tags', 'text')
         ;
     }
