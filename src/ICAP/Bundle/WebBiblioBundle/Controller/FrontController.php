@@ -24,6 +24,12 @@ class FrontController extends Controller
         return $username;
     }
 
+    protected function yourNotLogged($request) {
+        $request->getSession()->getFlashBag()->add('icap_webbiblio_error', "You're not logged.");
+
+        return $this->redirect($this->generateUrl('web_biblio_index'));
+    }
+
     /**
      * @Route("/", name="web_biblio_index")
      * @Template()
@@ -93,18 +99,16 @@ class FrontController extends Controller
     {
         $username = $this->getUsernameInSession($request);
         if ($username) {
-            $weblinks = $this->get("icap_webbiblio.manager")->getList($username);
+            $webLinks = $this->get("icap_webbiblio.manager")->getList($username);
             $form = $this->createForm(new WebLinkType());
 
             return array(
                 'form' => $form->createView(),
-                'weblinks' => $weblinks,
+                'webLinks' => $webLinks,
                 'username' => $username
             );
         } else {
-            $request->getSession()->getFlashBag()->add('icap_webbiblio_error', "You're not logged.");
-
-            return $this->redirect($this->generateUrl('web_biblio_index'));
+            $this->yourNotLogged($request);
         }
     }
 
@@ -119,16 +123,16 @@ class FrontController extends Controller
         if($username) {
             //Uses parameters in post (url, username, published, tags) to create a new register.
             //Returns success or error
-            $weblink = new WebLink();
-            $form = $this->createForm(new WebLinkType(), $weblink);
+            $webLink = new WebLink();
+            $form = $this->createForm(new WebLinkType(), $webLink);
 
             $form->bind($request);
             // Adding session var for complete entity
-            $weblink->setUsername($username);
+            $webLink->setUsername($username);
 
             if ($form->isValid()) {
-                $weblink = 
-                $weblinks = $this->get("icap_webbiblio.manager")->updateWebLink($weblink);
+                $webLink = 
+                $webLinks = $this->get("icap_webbiblio.manager")->updateWebLink($webLink);
                 $request->getSession()->getFlashBag()->add('icap_webbiblio_success', 'WebLink added!');
 
                 return $this->redirect($this->generateUrl('web_biblio_userlist'));
@@ -139,8 +143,7 @@ class FrontController extends Controller
                 return $this->redirect($this->generateUrl('web_biblio_userlist'));
             }
         } else {
-
-            return $this->redirect($this->generateUrl('web_biblio_index'));
+            $this->yourNotLogged($request);
         }
     }
 
@@ -156,81 +159,54 @@ class FrontController extends Controller
             //Deletes register using its id ($id)
             //Returns success or error
             $em = $this->getDoctrine()->getEntityManager();
-            $weblink = $em->getRepository('ICAPWebBiblioBundle:WebLink')->findOne($id);
+            $webLink = $em->getRepository('ICAPWebBiblioBundle:WebLink')->findOne($id);
             
-            if (!$weblink) {
+            if (!$webLink) {
                 throw $this->createNotFoundException(
                     'No register found for id '.$id
                 );
             } else {
-                $weblinks = $this->get("icap_webbiblio.manager")->removeWebLink($weblink);
+                $webLinks = $this->get("icap_webbiblio.manager")->removeWebLink($webLink);
                 die("Delete ok!");
             }
             
             return array();
         } else {
-
-            return $this->redirect($this->generateUrl('web_biblio_index'));
+            $this->yourNotLogged($request);
         }          
     }
 
     /**
-     * @Route("/publish/{id}", requirements={"id" = "\d+"}, name="web_biblio_publish")
-     * @Method({"POST, PUT"})
+     * @Route("/publish/{id}/{value}", requirements={"id" = "\d+", "value" = "0|1"}, name="web_biblio_publish")
+     * @Method({"POST"})
      * @Template()
      */
-    public function publishAction($id, Request $request)
+    public function setPublishedAction($id, $value, Request $request)
     {
         $username = $this->getUsernameInSession($request);
         if($username) {
             //Publishes a register using its id ($id)
             //Returns success or error
             $em = $this->getDoctrine()->getEntityManager();
-            $weblink = $em->getRepository('ICAPWebBiblioBundle:WebLink')->findOne($id);
+            $webLink = $em->getRepository('ICAPWebBiblioBundle:WebLink')->findOneBy(array('id' => $id));
             
-            if (!$weblink) {
+            if (!$webLink) {
                 throw $this->createNotFoundException(
                     'No register found for id '.$id
                 );
             } else {
-                $weblinks = $this->get("icap_webbiblio.manager")->publishWebLink($weblink, true);
-                die("Publish ok!");
+                $webLinks = $this->get("icap_webbiblio.manager")->publishWebLink($webLink, $value);
             }
 
-            return array();
-        } else {
+            if ($value) {
+                $request->getSession()->getFlashBag()->add('icap_webbiblio_success', 'WebLink "'.$webLink->getUrl().'" published');
+            } else {
+                $request->getSession()->getFlashBag()->add('icap_webbiblio_success', 'WebLink "'.$webLink->getUrl().'" unpublished');
+            }
 
-            return $this->redirect($this->generateUrl('web_biblio_index'));
+            return $this->redirect($this->generateUrl('web_biblio_userlist'));
+        } else {
+            $this->yourNotLogged($request);
         }
-    }
-
-    /**
-     * @Route("/unpublish/{id}", requirements={"id" = "\d+"}, name="web_biblio_unpublish")
-     * @Method({"POST, PUT"})
-     * @Template()
-     */
-    public function unpublishAction($id)
-    {
-        $username = $this->getUsernameInSession($request);
-        if($username) {
-            //Unpublishes a register using its id ($id)
-            //Returns success or error
-            $em = $this->getDoctrine()->getEntityManager();
-            $weblink = $em->getRepository('ICAPWebBiblioBundle:WebLink')->findOne($id);
-            
-            if (!$weblink) {
-                throw $this->createNotFoundException(
-                    'No register found for id '.$id
-                );
-            } else {
-                $weblinks = $this->get("icap_webbiblio.manager")->publishWebLink($weblink, false);
-                die("Unpublish ok!");
-            }
-            
-            return array();
-        } else {
-
-            return $this->redirect($this->generateUrl('web_biblio_index'));
-        }   
     }
 }

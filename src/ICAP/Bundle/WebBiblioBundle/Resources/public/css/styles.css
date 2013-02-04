@@ -41,39 +41,39 @@ body{
     color: red;
 }
 
-.weblinkListBlock {
+.webLinkListBlock {
     margin: 25px;
 }
 
-    .weblinkListBlock .listHeader {
+    .webLinkListBlock .listHeader {
         font-family: Arial;
         font-size: 18pt;
         color: #333;
         text-shadow: 1px 1px 1px #AAA;
     }
 
-    .weblinkListBlock ul li{
+    .webLinkListBlock ul li{
         font-size: 13pt;
         padding-bottom: 16px;
     }
-                .weblinkListBlock ul li a{
+                .webLinkListBlock ul li a{
                     text-indent: 10px;
                     font-color: #0e57d1;
                 }
                 
-                .weblinkListBlock ul li a:hover{
+                .webLinkListBlock ul li a:hover{
                     font-color: #6699BB;
                 }
                 
-                .weblinkTags {
+                .webLinkTags {
                     color: #76ac0b;
                     font-size: 8pt;
                 }
 
-.addNewWeblinkBlock {
+.addNewWebLinkBlock {
     margin: 25px;
 }
-    .addNewWeblinkBlock .addHeader {
+    .addNewWebLinkBlock .addHeader {
         font-family: Arial;
         font-size: 18pt;
         color: #333;
