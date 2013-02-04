@@ -10,6 +10,10 @@ use ICAP\Bundle\WebBiblioBundle\Form\WebLinkType;
 use ICAP\Bundle\WebBiblioBundle\Form\LoginType;
 use ICAP\Bundle\WebBiblioBundle\Entity\WebLink;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\Exception\NotValidCurrentPageException;
 
 /**
  * @Route("/web-biblio")
@@ -92,19 +96,30 @@ class FrontController extends Controller
     }
 
     /**
-     * @Route("/userlist", name="web_biblio_userlist")
+     * @Route("/userlist/{page}", name="web_biblio_userlist", requirements={"page" = "\d+"}, defaults={"page" = 1})
      * @Template()
      */
-    public function userlistAction(Request $request)
+    public function userlistAction($page, Request $request)
     {
         $username = $this->getUsernameInSession($request);
         if ($username) {
-            $webLinks = $this->get("icap_webbiblio.manager")->getList($username);
+
+            $adapter  = new DoctrineORMAdapter($this->get("icap_webbiblio.manager")->getListQueryBuilder($username));
+            $pager    = new PagerFanta($adapter);
+
+            $pager->setMaxPerPage($this->container->getParameter('nb_web_link_by_page'));
+            //$pager->setMaxPerPage(2);
+
+            try {
+                $pager->setCurrentPage($page);
+            } catch (NotValidCurrentPageException $e) {
+                throw new NotFoundHttpException();
+            }
             $form = $this->createForm(new WebLinkType());
 
             return array(
                 'form' => $form->createView(),
-                'webLinks' => $webLinks,
+                'pager' => $pager,
                 'username' => $username
             );
         } else {
