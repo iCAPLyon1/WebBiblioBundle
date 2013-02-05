@@ -1,7 +1,7 @@
 <div class="webLinkListBlock">  
     <div class="listHeader">Here you can find the list of your webLinks</div>
         
-    <ul>
+    <ul id="link-list">
 
     {# On affiche les pages : "Précédent 1 2 3 ... 4 5 Suivant" #}
     {% if pager.haveToPaginate %}
@@ -11,12 +11,15 @@
     {# On boucle sur le pager contenant nos news paginées #}
     {% for webLink in pager.currentPageResults %}
          <li>
+            <form method="POST" action="{{ path('web_biblio_remove', { 'id': webLink.id}) }}">
+                <input border="0" title="Delete" src="{{ asset('bundles/icapwebbiblio/images/cancel.png') }}" type="image" value="submit" align="middle" />
+            </form> 
             {% if webLink.published %}
             <form method="POST" action="{{ path('web_biblio_publish', { 'id': webLink.id, 'value': '0' }) }}">
-                <input border="0" src="{{ asset('bundles/icapwebbiblio/images/accept.png') }}" type="image" value="submit" align="middle" > 
+                <input border="0" title="Unpublish" src="{{ asset('bundles/icapwebbiblio/images/accept.png') }}" type="image" value="submit" align="middle" > 
             {% else %}
             <form method="POST" action="{{ path('web_biblio_publish', { 'id': webLink.id, 'value': '1' }) }}">
-                <input border="0" src="{{ asset('bundles/icapwebbiblio/images/delete.png') }}" type="image" value="submit" align="middle" > 
+                <input border="0" title="Publish" src="{{ asset('bundles/icapwebbiblio/images/delete.png') }}" type="image" value="submit" align="middle" > 
             {% endif %}
             
 
