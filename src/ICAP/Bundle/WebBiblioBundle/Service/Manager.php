@@ -8,10 +8,12 @@ use ICAP\Bundle\WebBiblioBundle\Entity\Tag;
 class Manager
 {
     protected $em;
+    protected $logger;
 
-    public function __construct($em)
+    public function __construct($em, $logger)
     {
         $this->em = $em;
+        $this->logger = $logger;
     }
 
     protected function getEntityManager()
@@ -79,14 +81,14 @@ class Manager
     public function addByParams($username, $url, $published, $tagNames) 
     {
         $webLink = $this->getWebLinkRepository()->findOneBy(array('url' => $url, 'username' => $username));
-        if(!$webLink) {
+        if (!$webLink) {
             $webLink = $this->createWebLink($username, $url);
         }
 
         $tags = array();
         foreach ($tagNames as $tagName) {
             $tag = $this->getTagRepository()->findOneBy(array('name' => $tagName));
-            if(!$tag) {
+            if (!$tag) {
                 $tag = $this->createTag($tagName);
             }
             $tags[] = $tag;
@@ -119,7 +121,7 @@ class Manager
      */
     public function publishWebLink($webLink, $published)
     {
-        if($webLink) {
+        if ($webLink) {
             $webLink->setPublished($published);
             $this->getEntityManager()->flush();
         }
@@ -147,7 +149,7 @@ class Manager
      */
     public function removeWebLink($webLink)
     {
-        if($webLink) {
+        if ($webLink) {
             $this->getEntityManager()->remove($webLink);
             $this->getEntityManager()->flush();
         }
@@ -165,28 +167,48 @@ class Manager
      */
     public function updateWebLink($notPersistedWebLink)
     {
+        $this->logger->debug('begin updateWebLink()');
+        $this->logger->debug('url: '.$notPersistedWebLink->getUrl());
+        $this->logger->debug('updateWebLink: '.$notPersistedWebLink->getUsername());
+
+        // Split notPersistedTags ans notPersistedWebLink
+        $notPersistedTags = $notPersistedWebLink->getTags();
+        $notPersistedWebLink->removeTags();
+
         $webLink = $this->getWebLinkRepository()->findOneBy(array(
                 'url' => $notPersistedWebLink->getUrl(), 
                 'username' => $notPersistedWebLink->getUsername())
         );
-        if(!$webLink) {
-            $webLink = $notPersistedWebLink;
-        }else {
-            //Publish state managment
-            $webLink->setPublished($notPersistedWebLink->getPublished());
 
-            //Add new tags
-            foreach ($notPersistedWebLink->getTags() as $notPersistedTag) {
-                $tag = $this->getTagRepository()->findOneBy(array('name' => $notPersistedTag->getName()));
-                if(!$tag) {
-                    $tag = $notPersistedTag;
-                    $this->getEntityManager()->persist($tag);
-                }
-                $webLink->addTag($tag);
+        if (!$webLink) {
+            $this->logger->debug('webLink not found');
+            $webLink = $notPersistedWebLink;
+            $this->getEntityManager()->persist($webLink);
+        } else {
+            $this->logger->debug('webLink found');
+        }
+
+        //Publish state managment
+        $webLink->setPublished($notPersistedWebLink->getPublished());
+
+        //Add new tags
+        foreach ($notPersistedTags as $notPersistedTag) {
+            $this->logger->debug('tagName to add: '.$notPersistedTag->getName());
+            $tag = $this->getTagRepository()->findOneBy(array('name' => $notPersistedTag->getName()));
+            if(!$tag) {
+                $this->logger->debug('tag not found');
+                $tag = $notPersistedTag;
+                $this->getEntityManager()->persist($tag);
+            }else {
+                $this->logger->debug('tag found');
             }
-        } 
+            $webLink->addTag($tag);
+        }
+
         $this->getEntityManager()->persist($webLink);
         $this->getEntityManager()->flush();
+
+        $this->logger->debug('end and flush updateWebLink()');
     }
 
     /**
@@ -198,7 +220,7 @@ class Manager
      */
     public function getListQueryBuilder($username) 
     {
-        if($username) {
+        if ($username) {
             return $this->getWebLinkRepository()->getWebLinksQueryBuilderForUsername($username);
         }else {
             return null;

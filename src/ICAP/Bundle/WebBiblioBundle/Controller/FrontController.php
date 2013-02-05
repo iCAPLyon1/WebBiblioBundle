@@ -23,7 +23,10 @@ class FrontController extends Controller
     protected function getUsernameInSession($request) {
         $username = null;
         if ($request->hasPreviousSession()) {
-           $username = $request->getSession()->get('icap_webbiblio_username'); 
+            $username = $request->getSession()->get('icap_webbiblio_username'); 
+            if($username == '') {
+                $username = null;
+            }
         }
         return $username;
     }

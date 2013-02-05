@@ -177,11 +177,15 @@ class WebLink
      */
     public function setTags($tagNames)
     {
-        $tags = explode(",", $tagNames);
-        foreach($tags as $tagName){
-            $tag = new Tag();
-            $tag->setName(trim($tagName));
-            $this->addTag($tag);
+        if($tagNames) {
+            $tags = explode(",", $tagNames);
+            foreach($tags as $tagName){
+                $tag = new Tag();
+                $tag->setName(trim($tagName));
+                $this->addTag($tag);
+            }
+        }else {
+            $this->tags = array();
         }
 
         return $this;
@@ -195,6 +199,15 @@ class WebLink
     public function removeTag(\ICAP\Bundle\WebBiblioBundle\Entity\Tag $tags)
     {
         $this->tags->removeElement($tags);
+    }
+
+    /**
+     * Remove tags
+     *
+     */
+    public function removeTags()
+    {
+        $this->tags = array();
     }
 
     /**
