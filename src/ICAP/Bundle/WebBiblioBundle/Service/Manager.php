@@ -196,12 +196,12 @@ class Manager
      * @param string $username identifier for a user
      * @return WebLink's array
      */
-    public function getList($username) 
+    public function getListQueryBuilder($username) 
     {
         if($username) {
-            return $this->getWebLinkRepository()->findBy(array('username' => $username));
+            return $this->getWebLinkRepository()->getWebLinksQueryBuilderForUsername($username);
         }else {
-            return $this->getWebLinkRepository()->findAll();
+            return null;
         }
     }
 

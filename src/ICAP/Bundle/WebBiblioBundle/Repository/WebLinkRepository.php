@@ -62,4 +62,12 @@ class WebLinkRepository extends EntityRepository
         return $this->getPublishedWebLinksQuery()->getResults();
     }
 
+        public function getWebLinksQueryBuilderForUsername($username)
+    {
+        return $this
+            ->createQueryBuilder('webLink')
+            ->andWhere('webLink.username = :username')
+            ->setParameter('username', $username)
+        ;
+    }
 }

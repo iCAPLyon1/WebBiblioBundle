@@ -2,14 +2,7 @@
 
 {% block title %}WebBiblio{% endblock %}
 
-{% block body %}
-	
-	<div class="header">
-		<span class="title">WebBiblio<small>(theque)</x-small></span>
-	</div>
-	
-	
-	{% include 'ICAPWebBiblioBundle:Front:list.html.twig' %}
-	{% include 'ICAPWebBiblioBundle:Front:form.html.twig' %}
-	
+{% block content %}
+    {% include 'ICAPWebBiblioBundle:Front:flashmessage.html.twig' %}
+    {% include 'ICAPWebBiblioBundle:Front:connect.html.twig' %}
 {% endblock %}
