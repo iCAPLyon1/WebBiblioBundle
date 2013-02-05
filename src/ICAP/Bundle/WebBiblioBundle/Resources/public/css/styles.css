@@ -102,3 +102,11 @@ body{
     display: inline;
     margin-right: 10px;
  }
+ 
+ #link-list li form{
+	display:inline;
+ }
+ 
+ #link-list {
+	list-style-type: square;
+ }

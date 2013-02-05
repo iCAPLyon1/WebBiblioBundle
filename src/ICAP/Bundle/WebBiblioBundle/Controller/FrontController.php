@@ -177,7 +177,7 @@ class FrontController extends Controller
 
     /**
      * @Route("/remove/{id}", requirements={"id" = "\d+"}, name="web_biblio_remove")
-     * @Method({"POST, DELETE"})
+     * @Method({"POST", "DELETE"})
      * @Template()
      */
     public function removeAction($id, Request $request)
@@ -187,7 +187,7 @@ class FrontController extends Controller
             //Deletes register using its id ($id)
             //Returns success or error
             $em = $this->getDoctrine()->getEntityManager();
-            $webLink = $em->getRepository('ICAPWebBiblioBundle:WebLink')->findOne($id);
+            $webLink = $em->getRepository('ICAPWebBiblioBundle:WebLink')->findOneBy(array('id' => $id));
             
             if (!$webLink) {
                 throw $this->createNotFoundException(
@@ -195,10 +195,11 @@ class FrontController extends Controller
                 );
             } else {
                 $webLinks = $this->get("icap_webbiblio.manager")->removeWebLink($webLink);
-                die("Delete ok!");
             }
             
-            return array();
+            $request->getSession()->getFlashBag()->add('icap_webbiblio_success', 'WebLink "'.$webLink->getUrl().'" deleted');
+
+            return $this->redirect($this->generateUrl('web_biblio_userlist'));
         } else {
             $this->yourNotLogged($request);
         }          
