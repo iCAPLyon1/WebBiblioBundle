@@ -28,10 +28,13 @@ class FrontController extends Controller
                 $username = null;
             }
         }
+
         return $username;
     }
 
     protected function yourNotLogged($request) {
+        $logger = $this->get('logger');
+        $logger->debug('yourNotLogged()');
         $request->getSession()->getFlashBag()->add('icap_webbiblio_error', "You're not logged.");
 
         return $this->redirect($this->generateUrl('web_biblio_index'));
@@ -45,10 +48,12 @@ class FrontController extends Controller
     {
         $username = $this->getUsernameInSession($request);
         if ($username) {
+
             return $this->redirect($this->generateUrl('web_biblio_userlist'));
         } else {
 
             $form = $this->createForm(new LoginType());
+
             return array('form' => $form->createView(),);
         }
     }
@@ -104,7 +109,11 @@ class FrontController extends Controller
      */
     public function userlistAction($page, Request $request)
     {
+        $logger = $this->get('logger');
+
+        $logger->debug('userlistAction()');
         $username = $this->getUsernameInSession($request);
+        $logger->debug('username: '.$username);
         if ($username) {
 
             $adapter  = new DoctrineORMAdapter($this->get("icap_webbiblio.manager")->getListQueryBuilder($username));
@@ -119,6 +128,7 @@ class FrontController extends Controller
                 throw new NotFoundHttpException();
             }
             $form = $this->createForm(new WebLinkType());
+            $logger->debug('userlistAction(), view generation');
 
             return array(
                 'form' => $form->createView(),
@@ -126,7 +136,8 @@ class FrontController extends Controller
                 'username' => $username
             );
         } else {
-            $this->yourNotLogged($request);
+
+            return $this->yourNotLogged($request);
         }
     }
 
