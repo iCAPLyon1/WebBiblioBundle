@@ -79,7 +79,7 @@ class FrontController extends Controller
             $logger->info('connectAction(username = '+$username+')');
             $request->getSession()->set('icap_webbiblio_username', $username);
 
-            return $this->redirect($this->generateUrl('web_biblio_index'));
+            return $this->redirect($this->generateUrl('web_biblio_userlist'));
         } else {
             $request->getSession()->getFlashBag()->add('icap_webbiblio_error', 'Invalid form! Connection aborted...');
 
@@ -120,7 +120,6 @@ class FrontController extends Controller
             $pager    = new PagerFanta($adapter);
 
             $pager->setMaxPerPage($this->container->getParameter('nb_web_link_by_page'));
-            //$pager->setMaxPerPage(2);
 
             try {
                 $pager->setCurrentPage($page);

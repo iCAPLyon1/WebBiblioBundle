@@ -19,13 +19,12 @@
                 <input border="0" src="{{ asset('bundles/icapwebbiblio/images/delete.png') }}" type="image" value="submit" align="middle" > 
             {% endif %}
             
-
-            <a href="{{ webLink.url }}" target="_blank">{{ webLink.url }}</a>
-            <span class="webLinkTags">[
-            {% for tag in webLink.tags %} 
-                {{ tag.name }}{% if not loop.last %},{% endif %}
-            {% endfor %}
-            ]</span><br/>
+                <a href="{{ webLink.url }}" target="_blank">{{ webLink.url }}</a>
+                <span class="webLinkTags">[
+                {% for tag in webLink.tags %} 
+                    {{ tag.name }}{% if not loop.last %},{% endif %}
+                {% endfor %}
+                ]</span><br/>
 
             </form>
         </li>
