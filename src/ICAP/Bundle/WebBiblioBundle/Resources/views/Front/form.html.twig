@@ -8,3 +8,7 @@
         <input type="submit" value="Submit" />
     </form>
 </div>
+
+{% block javascripts %}
+    <script type='text/javascript'>var searchTagsUrl = "{{ path("web_biblio_api_search_tag") }}";</script>
+{% endblock %}

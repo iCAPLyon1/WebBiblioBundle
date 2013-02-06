@@ -233,8 +233,19 @@ class Manager
      * @param array $params a mixed contains array usernames and/or tagNames
      * @return WebLink's array
      */
-    public function search($params)
+    public function searchWeblink($params)
     {
         return $this->getWebLinkRepository()->customSearch($params);
+    }
+
+     /**
+     * Retrieve all tags matching params
+     *
+     * @param array $params a mixed array with tagName query
+     * @return Tags' array
+     */
+    public function searchTag($params)
+    {
+        return $this->getTagRepository()->customSearch($params);
     }
 }

@@ -2,3 +2,10 @@ services:
     icap_webbiblio.manager: 
         class: ICAP\Bundle\WebBiblioBundle\Service\Manager
         arguments: [@doctrine.orm.entity_manager, @logger]
+
+    acme_demo.type.issue_selector:
+        class: ICAP\Bundle\WebBiblioBundle\Form\TagsType
+        arguments: []
+        tags:
+            - { name: form.type, alias: icap_bundle_webbibliobundle_tagstype }
+

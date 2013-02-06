@@ -16,7 +16,7 @@ class WebLinkType extends AbstractType
             ->add('published', 'checkbox', array(
                 'required'  => false,
             ))
-            ->add('tags', 'text')
+            ->add('tags', 'icap_bundle_webbibliobundle_tagstype');
         ;
     }
 

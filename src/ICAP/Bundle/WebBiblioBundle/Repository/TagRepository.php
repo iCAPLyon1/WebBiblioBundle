@@ -12,4 +12,28 @@ use Doctrine\ORM\EntityRepository;
  */
 class TagRepository extends EntityRepository
 {
+	const QUERY_PROPERTY = "q";
+    
+    public function customSearch($params)
+    {
+        $qb = $this->getTagsQueryBuilder();
+        foreach ($params as $key => $value) {
+            if($key == self::QUERY_PROPERTY){
+                $qb
+                    ->andWhere('tag.name LIKE :value')
+                    ->setParameter('value', '%'.$value.'%')
+                ;
+            }
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+	public function getTagsQueryBuilder()
+    {
+        return $this
+            ->createQueryBuilder('tag')
+            ->orderBy('tag.name', 'ASC')
+        ;
+    }
 }
