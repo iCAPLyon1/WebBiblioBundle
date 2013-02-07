@@ -14,130 +14,123 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Exception\NotValidCurrentPageException;
+use Symfony\Component\Security\Core\SecurityContext;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * @Route("/web-biblio")
  */
 class FrontController extends Controller
 {
-    protected function getUsernameInSession($request) {
-        $username = null;
-        if ($request->hasPreviousSession()) {
-            $username = $request->getSession()->get('icap_webbiblio_username'); 
-            if($username == '') {
-                $username = null;
-            }
-        }
-
-        return $username;
-    }
-
-    protected function yourNotLogged($request) {
-        $logger = $this->get('logger');
-        $logger->debug('yourNotLogged()');
-        $request->getSession()->getFlashBag()->add('icap_webbiblio_error', "You're not logged.");
-
-        return $this->redirect($this->generateUrl('web_biblio_index'));
-    }
-
     /**
-     * @Route("/", name="web_biblio_index")
+     * @Route("/login_test", name="web_biblio_test")
      * @Template()
      */
-    public function indexAction(Request $request)
+    public function testAction()
     {
-        $username = $this->getUsernameInSession($request);
-        if ($username) {
-
-            return $this->redirect($this->generateUrl('web_biblio_userlist'));
-        } else {
-
-            $form = $this->createForm(new LoginType());
-
-            return array('form' => $form->createView(),);
+        $logger = $this->get('logger');
+        $user = $this->getUser();
+        if($user) {
+            $username = $user->getUsername();
+            $logger->debug('username: '.$username);
+            die("Logged: ".$username);
+        }else {
+            die("not Logged");
         }
+
+        return array();
     }
 
     /**
-     * "Connect" a user with his username : add a http session "username" variable
+     * @Route("/login", name="web_biblio_login")
+     * @Template()
+     */
+    public function loginAction()
+    {
+        $request = $this->getRequest();
+        $session = $request->getSession();
+
+        // get the login error if there is one
+        if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
+            $error = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
+        } else {
+            $error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
+            $session->remove(SecurityContext::AUTHENTICATION_ERROR);
+        }
+
+        return array(
+            // last username entered by the user
+            'last_username' => $session->get(SecurityContext::LAST_USERNAME),
+            'error'         => $error,
+        );
+    }
+
+    /**
+     * @Route("/login_redirect", name="web_biblio_not_logged")
+     * @Template()
+     */
+    public function notLoggedAction()
+    {
+        $request = $this->getRequest();
+        $session = $request->getSession();
+        $session->getFlashBag()->add('icap_webbiblio_error', "You 're not logged!");
+
+       return $this->redirect($this->generateUrl('web_biblio_login'));
+    }
+
+    /**
+     * Connect a user. Supported by symfony2.
+     * See app/config/security.yml
      *
-     * @Route("/connect", name="web_biblio_connect")
-     * @Method({"POST"})
+     * @Route("/login_check", name="web_biblio_connect")
      * @Template()
      */
-    public function connectAction(Request $request)
+    public function connectAction()
     {
-        $logger = $this->get('logger');
-        $logger->info('connectAction()');
-
-        $form = $this->createForm(new LoginType());
-        $form->bind($request);
-
-        if ($form->isValid()) {
-            $logger->info('connectAction(form valid)');
-            $username = $form->get('username')->getData();
-            $logger->info('connectAction(username = '+$username+')');
-            $request->getSession()->set('icap_webbiblio_username', $username);
-
-            return $this->redirect($this->generateUrl('web_biblio_userlist'));
-        } else {
-            $request->getSession()->getFlashBag()->add('icap_webbiblio_error', 'Invalid form! Connection aborted...');
-
-            return $this->redirect($this->generateUrl('web_biblio_index'));
-        }
+        return array();
     }
 
     /**
-     * "Disconnect" a user with his username : remove http session "username" variable
+     * Disconnect a user. Supported by symfony2
+     * See app/config/security.yml
      *
      * @Route("/disconnect", name="web_biblio_disconnect")
-     * @Method({"POST"})
      * @Template()
      */
-    public function disconnectAction(Request $request)
+    public function disconnectAction()
     {
-        if ($request->hasPreviousSession()) {
-           $username = $request->getSession()->remove('icap_webbiblio_username'); 
-        }
-
-        return $this->redirect($this->generateUrl('web_biblio_index'));
+        return array();
     }
 
     /**
-     * @Route("/userlist/{page}", name="web_biblio_userlist", requirements={"page" = "\d+"}, defaults={"page" = 1})
+     * @Route("/", name="web_biblio_index", defaults={"page" = 1})
+     * @Route("/{page}", name="web_biblio_userlist", requirements={"page" = "\d+"}, defaults={"page" = 1})
      * @Template()
      */
-    public function userlistAction($page, Request $request)
+    public function userlistAction($page)
     {
         $logger = $this->get('logger');
-
         $logger->debug('userlistAction()');
-        $username = $this->getUsernameInSession($request);
+        
+        $username = $this->getUser()->getUsername();
         $logger->debug('username: '.$username);
-        if ($username) {
 
-            $adapter  = new DoctrineORMAdapter($this->get("icap_webbiblio.manager")->getListQueryBuilder($username));
-            $pager    = new PagerFanta($adapter);
+        $adapter  = new DoctrineORMAdapter($this->get("icap_webbiblio.manager")->getListQueryBuilder($username));
+        $pager    = new PagerFanta($adapter);
 
-            $pager->setMaxPerPage($this->container->getParameter('nb_web_link_by_page'));
+        $pager->setMaxPerPage($this->container->getParameter('nb_web_link_by_page'));
 
-            try {
-                $pager->setCurrentPage($page);
-            } catch (NotValidCurrentPageException $e) {
-                throw new NotFoundHttpException();
-            }
-            $form = $this->createForm(new WebLinkType());
-            $logger->debug('userlistAction(), view generation');
-
-            return array(
-                'form' => $form->createView(),
-                'pager' => $pager,
-                'username' => $username
-            );
-        } else {
-
-            return $this->yourNotLogged($request);
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $e) {
+            throw new NotFoundHttpException();
         }
+        $form = $this->createForm(new WebLinkType());
+
+        return array(
+            'form' => $form->createView(),
+            'pager' => $pager
+        );
     }
 
     /**
@@ -147,32 +140,26 @@ class FrontController extends Controller
      */
     public function addAction(Request $request)
     {
-        $username = $this->getUsernameInSession($request);
-        if($username) {
-            //Uses parameters in post (url, username, published, tags) to create a new register.
-            //Returns success or error
-            $webLink = new WebLink();
-            $form = $this->createForm(new WebLinkType(), $webLink);
+        $username = $this->getUser()->getUsername();
+        //Uses parameters in post (url, username, published, tags) to create a new register.
+        //Returns success or error
+        $webLink = new WebLink();
+        $form = $this->createForm(new WebLinkType(), $webLink);
 
-            $form->bind($request);
-            // Adding session var for complete entity
-            $webLink->setUsername($username);
+        $form->bind($request);
+        // Adding session var for complete entity
+        $webLink->setUsername($username);
 
-            if ($form->isValid()) {
-                $webLink = 
-                $webLinks = $this->get("icap_webbiblio.manager")->updateWebLink($webLink);
-                $request->getSession()->getFlashBag()->add('icap_webbiblio_success', 'WebLink added!');
-
-                return $this->redirect($this->generateUrl('web_biblio_userlist'));
-            } else{
-                //Display error!
-                $request->getSession()->getFlashBag()->add('icap_webbiblio_error', 'Invalid form! WebLink not added...');
-
-                return $this->redirect($this->generateUrl('web_biblio_userlist'));
-            }
-        } else {
-            $this->yourNotLogged($request);
+        if ($form->isValid()) {
+            $webLink = 
+            $webLinks = $this->get("icap_webbiblio.manager")->updateWebLink($webLink);
+            $request->getSession()->getFlashBag()->add('icap_webbiblio_success', 'WebLink added!');
+        } else{
+            //Display error!
+            $request->getSession()->getFlashBag()->add('icap_webbiblio_error', 'Invalid form! WebLink not added...');
         }
+
+        return $this->redirect($this->generateUrl('web_biblio_userlist'));
     }
 
     /**
@@ -182,27 +169,22 @@ class FrontController extends Controller
      */
     public function removeAction($id, Request $request)
     {
-        $username = $this->getUsernameInSession($request);
-        if($username) {
-            //Deletes register using its id ($id)
-            //Returns success or error
-            $em = $this->getDoctrine()->getEntityManager();
-            $webLink = $em->getRepository('ICAPWebBiblioBundle:WebLink')->findOneBy(array('id' => $id));
-            
-            if (!$webLink) {
-                throw $this->createNotFoundException(
-                    'No register found for id '.$id
-                );
-            } else {
-                $webLinks = $this->get("icap_webbiblio.manager")->removeWebLink($webLink);
-            }
-            
-            $request->getSession()->getFlashBag()->add('icap_webbiblio_success', 'WebLink "'.$webLink->getUrl().'" deleted');
-
-            return $this->redirect($this->generateUrl('web_biblio_userlist'));
+        $username = $this->getUser()->getUsername();
+        //Deletes register using its id ($id)
+        //Returns success or error
+        $em = $this->getDoctrine()->getEntityManager();
+        $webLink = $em->getRepository('ICAPWebBiblioBundle:WebLink')->findOneBy(array('id' => $id));
+        
+        if (!$webLink) {
+            throw $this->createNotFoundException(
+                'No register found for id '.$id
+            );
         } else {
-            $this->yourNotLogged($request);
-        }          
+            $webLinks = $this->get("icap_webbiblio.manager")->removeWebLink($webLink);
+        }
+        $request->getSession()->getFlashBag()->add('icap_webbiblio_success', 'WebLink "'.$webLink->getUrl().'" deleted');
+
+        return $this->redirect($this->generateUrl('web_biblio_userlist'));       
     }
 
     /**
@@ -212,30 +194,26 @@ class FrontController extends Controller
      */
     public function setPublishedAction($id, $value, Request $request)
     {
-        $username = $this->getUsernameInSession($request);
-        if($username) {
-            //Publishes a register using its id ($id)
-            //Returns success or error
-            $em = $this->getDoctrine()->getEntityManager();
-            $webLink = $em->getRepository('ICAPWebBiblioBundle:WebLink')->findOneBy(array('id' => $id));
-            
-            if (!$webLink) {
-                throw $this->createNotFoundException(
-                    'No register found for id '.$id
-                );
-            } else {
-                $webLinks = $this->get("icap_webbiblio.manager")->publishWebLink($webLink, $value);
-            }
-
-            if ($value) {
-                $request->getSession()->getFlashBag()->add('icap_webbiblio_success', 'WebLink "'.$webLink->getUrl().'" published');
-            } else {
-                $request->getSession()->getFlashBag()->add('icap_webbiblio_success', 'WebLink "'.$webLink->getUrl().'" unpublished');
-            }
-
-            return $this->redirect($this->generateUrl('web_biblio_userlist'));
+        $username = $this->getUser()->getUsername();
+        //Publishes a register using its id ($id)
+        //Returns success or error
+        $em = $this->getDoctrine()->getEntityManager();
+        $webLink = $em->getRepository('ICAPWebBiblioBundle:WebLink')->findOneBy(array('id' => $id));
+        
+        if (!$webLink) {
+            throw $this->createNotFoundException(
+                'No register found for id '.$id
+            );
         } else {
-            $this->yourNotLogged($request);
+            $webLinks = $this->get("icap_webbiblio.manager")->publishWebLink($webLink, $value);
         }
+
+        if ($value) {
+            $request->getSession()->getFlashBag()->add('icap_webbiblio_success', 'WebLink "'.$webLink->getUrl().'" published');
+        } else {
+            $request->getSession()->getFlashBag()->add('icap_webbiblio_success', 'WebLink "'.$webLink->getUrl().'" unpublished');
+        }
+
+        return $this->redirect($this->generateUrl('web_biblio_userlist'));
     }
 }

@@ -1,7 +1,5 @@
 <div class="connectBlock">
     <div class="connectHeader">
-        <form method="POST" action="{{ path('web_biblio_disconnect') }}">
-            Hello {{username}} <input type="submit" value="Disconnect" />
-        </form>
+        Hello {{app.user.username}} <a href="{{ path('web_biblio_disconnect') }}">Disconnect</a>
     </div>
 </div>
