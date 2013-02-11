@@ -59,3 +59,20 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+# SSO Configuration
+#be_simple_sso_auth:
+#    admin_sso:
+#        protocol:
+#            id: cas
+#            version: 2
+#        server:
+#            id: cas
+#            login_url: https://cas.univ-lyon1.fr:443/cas/login
+#            logout_url: https://cas.univ-lyon1.fr:443/cas/logout
+#            validation_url: https://cas.univ-lyon1.fr:443/cas/serviceValidate
+
+fos_user:
+    db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
+    firewall_name: main
+    user_class: ICAP\Bundle\WebBiblioBundle\Entity\User

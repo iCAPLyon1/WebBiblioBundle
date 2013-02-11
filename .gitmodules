@@ -1,0 +1,3 @@
+[submodule "vendor/bundles/Sensio/CasBundle"]
+	path = vendor/bundles/Sensio/CasBundle
+	url = git://github.com/sensio/CasBundle.git

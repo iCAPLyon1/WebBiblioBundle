@@ -23,86 +23,6 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 class FrontController extends Controller
 {
     /**
-     * @Route("/login_test", name="web_biblio_test")
-     * @Template()
-     */
-    public function testAction()
-    {
-        $logger = $this->get('logger');
-        $user = $this->getUser();
-        if($user) {
-            $username = $user->getUsername();
-            $logger->debug('username: '.$username);
-            die("Logged: ".$username);
-        }else {
-            die("not Logged");
-        }
-
-        return array();
-    }
-
-    /**
-     * @Route("/login", name="web_biblio_login")
-     * @Template()
-     */
-    public function loginAction()
-    {
-        $request = $this->getRequest();
-        $session = $request->getSession();
-
-        // get the login error if there is one
-        if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
-            $error = $request->attributes->get(SecurityContext::AUTHENTICATION_ERROR);
-        } else {
-            $error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
-            $session->remove(SecurityContext::AUTHENTICATION_ERROR);
-        }
-
-        return array(
-            // last username entered by the user
-            'last_username' => $session->get(SecurityContext::LAST_USERNAME),
-            'error'         => $error,
-        );
-    }
-
-    /**
-     * @Route("/login_redirect", name="web_biblio_not_logged")
-     * @Template()
-     */
-    public function notLoggedAction()
-    {
-        $request = $this->getRequest();
-        $session = $request->getSession();
-        $session->getFlashBag()->add('icap_webbiblio_error', "You 're not logged!");
-
-       return $this->redirect($this->generateUrl('web_biblio_login'));
-    }
-
-    /**
-     * Connect a user. Supported by symfony2.
-     * See app/config/security.yml
-     *
-     * @Route("/login_check", name="web_biblio_connect")
-     * @Template()
-     */
-    public function connectAction()
-    {
-        return array();
-    }
-
-    /**
-     * Disconnect a user. Supported by symfony2
-     * See app/config/security.yml
-     *
-     * @Route("/disconnect", name="web_biblio_disconnect")
-     * @Template()
-     */
-    public function disconnectAction()
-    {
-        return array();
-    }
-
-    /**
      * @Route("/", name="web_biblio_index", defaults={"page" = 1})
      * @Route("/{page}", name="web_biblio_userlist", requirements={"page" = "\d+"}, defaults={"page" = 1})
      * @Template()
@@ -112,7 +32,7 @@ class FrontController extends Controller
         $logger = $this->get('logger');
         $logger->debug('userlistAction()');
         
-        $username = $this->getUser()->getUsername();
+        $username = $this->getUser()->getEmail();
         $logger->debug('username: '.$username);
 
         $adapter  = new DoctrineORMAdapter($this->get("icap_webbiblio.manager")->getListQueryBuilder($username));
@@ -140,7 +60,7 @@ class FrontController extends Controller
      */
     public function addAction(Request $request)
     {
-        $username = $this->getUser()->getUsername();
+        $username = $this->getUser()->getEmail();
         //Uses parameters in post (url, username, published, tags) to create a new register.
         //Returns success or error
         $webLink = new WebLink();
@@ -169,7 +89,7 @@ class FrontController extends Controller
      */
     public function removeAction($id, Request $request)
     {
-        $username = $this->getUser()->getUsername();
+        $username = $this->getUser()->getEmail();
         //Deletes register using its id ($id)
         //Returns success or error
         $em = $this->getDoctrine()->getEntityManager();
@@ -194,7 +114,7 @@ class FrontController extends Controller
      */
     public function setPublishedAction($id, $value, Request $request)
     {
-        $username = $this->getUser()->getUsername();
+        $username = $this->getUser()->getEmail();
         //Publishes a register using its id ($id)
         //Returns success or error
         $em = $this->getDoctrine()->getEntityManager();
