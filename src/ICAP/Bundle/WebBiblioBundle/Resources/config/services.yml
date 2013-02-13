@@ -1,7 +1,7 @@
 services: 
     icap_webbiblio.manager: 
         class: ICAP\Bundle\WebBiblioBundle\Service\Manager
-        arguments: [@doctrine.orm.entity_manager, @logger]
+        arguments: [@doctrine.orm.entity_manager, @logger, @security.acl.provider, @security.context]
 
     icap_webbiblio.type.icap_bundle_webbibliobundle_tagstype:
         class: ICAP\Bundle\WebBiblioBundle\Form\TagsType

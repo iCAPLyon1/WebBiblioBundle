@@ -4,16 +4,24 @@ namespace ICAP\Bundle\WebBiblioBundle\Service;
 
 use ICAP\Bundle\WebBiblioBundle\Entity\WebLink;
 use ICAP\Bundle\WebBiblioBundle\Entity\Tag;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
+use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 
 class Manager
 {
     protected $em;
     protected $logger;
+    protected $aclProvider;
+    protected $securityContext;
 
-    public function __construct($em, $logger)
+    public function __construct($em, $logger, $aclProvider, $securityContext)
     {
         $this->em = $em;
         $this->logger = $logger;
+        $this->aclProvider = $aclProvider;
+        $this->securityContext = $securityContext;
     }
 
     protected function getEntityManager()
@@ -108,6 +116,7 @@ class Manager
     public function publishWebLinkById($id, $published)
     {
         $webLink = $this->getWebLinkRepository()->findOne($id);
+        $this->verifIsOwnerForWebLink($webLink);
         $this->publishWebLink($weblink, $published);
     }
 
@@ -122,6 +131,7 @@ class Manager
     public function publishWebLink($webLink, $published)
     {
         if ($webLink) {
+            $this->verifIsOwnerForWebLink($webLink);
             $webLink->setPublished($published);
             $this->getEntityManager()->flush();
         }
@@ -137,6 +147,7 @@ class Manager
     public function removeWebLinkById($webLink)
     {
         $webLink = $this->getWebLinkRepository()->findOne($id);
+        $this->verifIsOwnerForWebLink($webLink);
         $this->removeWebLink($webLink);
     }
 
@@ -150,6 +161,7 @@ class Manager
     public function removeWebLink($webLink)
     {
         if ($webLink) {
+            $this->verifIsOwnerForWebLink($webLink);
             $this->getEntityManager()->remove($webLink);
             $this->getEntityManager()->flush();
         }
@@ -184,8 +196,13 @@ class Manager
             $this->logger->debug('webLink not found');
             $webLink = $notPersistedWebLink;
             $this->getEntityManager()->persist($webLink);
+            $this->getEntityManager()->flush();
+
+            $this->addAclToWebLink($webLink);
         } else {
             $this->logger->debug('webLink found');
+
+            $this->verifIsOwnerForWebLink($webLink);
         }
 
         //Publish state managment
@@ -210,6 +227,33 @@ class Manager
 
         $this->logger->debug('end and flush updateWebLink()');
         return $webLink;
+    }
+
+    public function addAclToWebLink($webLink) 
+    {
+        $this->logger->debug('add acl to weblink');
+        // create acl for the webLink
+        $objectIdentity = ObjectIdentity::fromDomainObject($webLink);
+        $acl = $this->aclProvider->createAcl($objectIdentity);
+
+        // Find logged user identity from security context
+        $user = $this->securityContext->getToken()->getUser();
+        $securityIdentity = UserSecurityIdentity::fromAccount($user);
+
+        // add owner role
+        $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
+        $this->aclProvider->updateAcl($acl);
+    }
+
+    public function verifIsOwnerForWebLink($webLink) 
+    {
+        // check for edit access
+        if (false === $this->securityContext->isGranted('EDIT', $webLink))
+        {
+            throw new AccessDeniedException();
+        }else {
+            die("acces granted");
+        }
     }
 
     /**
