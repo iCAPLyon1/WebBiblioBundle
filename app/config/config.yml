@@ -2,6 +2,7 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: @ICAPWebBiblioBundle/Resources/config/config.yml }
+    - { resource: @ICAPWebBiblioBundle/Resources/config/admin.xml }
 
 framework:
     #esi:             ~
@@ -76,3 +77,12 @@ fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main
     user_class: ICAP\Bundle\WebBiblioBundle\Entity\User
+
+sonata_block:
+    default_contexts: [cms]
+    blocks:
+        sonata.admin.block.admin_list:
+            contexts:   [admin]
+
+        sonata.block.service.text:
+        sonata.block.service.rss:

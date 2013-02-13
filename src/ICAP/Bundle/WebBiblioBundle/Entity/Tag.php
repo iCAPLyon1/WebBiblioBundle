@@ -100,4 +100,14 @@ class Tag
     {
         return $this->webLinks;
     }
+
+    /**
+     * to string method
+     *
+     * @return String name
+     */
+    public function __toString()
+    {
+        return $this->name;
+    }
 }

@@ -3,7 +3,7 @@ services:
         class: ICAP\Bundle\WebBiblioBundle\Service\Manager
         arguments: [@doctrine.orm.entity_manager, @logger]
 
-    acme_demo.type.issue_selector:
+    icap_webbiblio.type.icap_bundle_webbibliobundle_tagstype:
         class: ICAP\Bundle\WebBiblioBundle\Form\TagsType
         arguments: []
         tags:

@@ -1,0 +1,4 @@
+ICAP\Bundle\WebBiblioBundle\Entity\WebLink:
+    properties:
+        url:
+            - NotBlank: ~

@@ -228,6 +228,22 @@ class Manager
     }
 
     /**
+     * Retrieve index of a weblink in a list of weblinks of a user (publish or not)
+     * If username was null retrieve all webLinks.
+     *
+     * @param string $username identifier for a user
+     * @return WebLink's array
+     */
+    public function getWebLinkIndexInList($username, $webLinkId) 
+    {
+        if ($username) {
+            return $this->getWebLinkRepository()->getWebLinkIndexInList($username, $webLinkId);
+        }else {
+            return null;
+        }
+    }
+
+    /**
      * Retrieve all published WebLinks matching params
      *
      * @param array $params a mixed contains array usernames and/or tagNames
@@ -235,7 +251,7 @@ class Manager
      */
     public function searchWeblink($params)
     {
-        return $this->getWebLinkRepository()->customSearch($params);
+        return $this->getWebLinkRepository()->extract($params);
     }
 
      /**
@@ -246,6 +262,6 @@ class Manager
      */
     public function searchTag($params)
     {
-        return $this->getTagRepository()->customSearch($params);
+        return $this->getTagRepository()->extract($params);
     }
 }
