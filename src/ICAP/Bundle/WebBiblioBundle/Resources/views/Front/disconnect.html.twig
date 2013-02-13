@@ -1,7 +1,11 @@
 <div class="connectBlock">
     <div class="connectHeader">
-        Hello {{app.user.username}} <a href="{{ path('fos_user_security_logout') }}">Disconnect</a> 
+        {% if gravatar_exists(app.user.email) %}
+            <img src="{{ gravatar(app.user.email) }}" />
+        {% endif %}
+        Hello {{app.user.username}} <a href="{{ path('fos_user_security_logout') }}">Disconnect</a>
         {% if is_granted('ROLE_ADMIN') %}
+            | 
             <a href="{{ path('sonata_admin_dashboard') }}">Admin dashboard</a> 
         {% endif %}
     </div>
