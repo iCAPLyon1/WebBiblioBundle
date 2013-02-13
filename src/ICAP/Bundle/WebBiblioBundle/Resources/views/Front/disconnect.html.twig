@@ -1,6 +1,9 @@
 <div class="connectBlock">
     <div class="connectHeader">
-        Hello {{app.user.username}} <a href="{{ path('fos_user_security_logout') }}">Disconnect</a>
+        Hello {{app.user.username}} <a href="{{ path('fos_user_security_logout') }}">Disconnect</a> 
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('sonata_admin_dashboard') }}">Admin dashboard</a> 
+        {% endif %}
     </div>
     <ul>
         {% for role in app.user.roles %}
