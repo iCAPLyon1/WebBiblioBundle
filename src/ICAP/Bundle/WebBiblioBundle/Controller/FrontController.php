@@ -22,10 +22,26 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
  */
 class FrontController extends Controller
 {
+    /**Method that redirects to page given a weblink Id
+     *
+     *
+     */
+    protected function goToPageByWebLinkId($username, $id)
+    {
+        $page = 1;
+        if($id>0){
+            $idx = $this->get("icap_webbiblio.manager")->getWebLinkIndexInList($username, $id);
+            if($idx && $idx>0){
+                $page = ceil($idx/$this->container->getParameter('nb_web_link_by_page'));
+            }
+        }
+
+        return $this->redirect($this->generateUrl('web_biblio_userlist', array('page' => $page)));
+    }
+
     /**
      * @Route("/", name="web_biblio_index", defaults={"page" = 1})
      * @Route("/{page}", name="web_biblio_userlist", requirements={"page" = "\d+"}, defaults={"page" = 1})
-     * @Route("/byId/{id}", name="web_biblio_userlist_by_id", requirements={"id" = "\d+"}, defaults={"page" = 1, "id" = -1})
      * @Template()
      */
     public function userlistAction($page)
@@ -41,7 +57,6 @@ class FrontController extends Controller
         $pager    = new PagerFanta($adapter);
 
         $pager->setMaxPerPage($this->container->getParameter('nb_web_link_by_page'));
-
 
         try {
             $pager->setCurrentPage($page);
@@ -72,7 +87,7 @@ class FrontController extends Controller
         $form->bind($request);
         // Adding session var for complete entity
         $webLink->setUsername($username);
-
+       
         if ($form->isValid()) {
             $webLink = $this->get("icap_webbiblio.manager")->updateWebLink($webLink);
             $request->getSession()->getFlashBag()->add('icap_webbiblio_success', 'WebLink added!');
@@ -80,8 +95,8 @@ class FrontController extends Controller
             //Display error!
             $request->getSession()->getFlashBag()->add('icap_webbiblio_error', 'Invalid form! WebLink not added...');
         }
-
-        return $this->redirect($this->generateUrl('web_biblio_userlist'));
+        
+        return $this->goToPageByWebLinkId($username, $webLink->getId());
     }
 
     /**
@@ -136,6 +151,6 @@ class FrontController extends Controller
             $request->getSession()->getFlashBag()->add('icap_webbiblio_success', 'WebLink "'.$webLink->getUrl().'" unpublished');
         }
 
-        return $this->redirect($this->generateUrl('web_biblio_userlist'));
+        return $this->goToPageByWebLinkId($username, $webLink->getId());
     }
 }

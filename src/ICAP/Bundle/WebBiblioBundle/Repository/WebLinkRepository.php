@@ -102,10 +102,12 @@ class WebLinkRepository extends EntityRepository
     {
         $q = $this
             ->getWebLinksQueryBuilderForUsername($username)
+            ->select('count(webLink.id) as total')
             ->andWhere('webLink.id <= :weblinkId')
             ->setParameter('weblinkId', $weblinkId)
+            
         ;
 
-        return $this->getQuery()->getResult()->count();
+        return $q->getQuery()->getSingleScalarResult();
     }
 }
