@@ -196,4 +196,14 @@ class WebLink
     {
         return $this->tags;
     }
+
+    /**
+     * to string method
+     *
+     * @return String name
+     */
+    public function __toString()
+    {
+        return $this->url;
+    }
 }

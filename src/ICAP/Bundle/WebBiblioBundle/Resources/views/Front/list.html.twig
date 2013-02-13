@@ -5,7 +5,7 @@
 
     {# On affiche les pages : "Précédent 1 2 3 ... 4 5 Suivant" #}
     {% if pager.haveToPaginate %}
-        {{ pagerfanta(pager, 'twitter_bootstrap', {'routeName': 'web_biblio_userlist'}) }}
+        {{ pagerfanta(pager, 'twitter_bootstrap', {'proximity' : 1, 'routeName': 'web_biblio_userlist'}) }}
     {% endif %}
 
     {# On boucle sur le pager contenant nos news paginées #}

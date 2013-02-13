@@ -12,9 +12,9 @@ use Doctrine\ORM\EntityRepository;
  */
 class TagRepository extends EntityRepository
 {
-	const QUERY_PROPERTY = "q";
+    const QUERY_PROPERTY = "q";
     
-    public function customSearch($params)
+    public function extractQueryBuilder($params)
     {
         $qb = $this->getTagsQueryBuilder();
         foreach ($params as $key => $value) {
@@ -26,14 +26,42 @@ class TagRepository extends EntityRepository
             }
         }
 
-        return $qb->getQuery()->getResult();
+        return $qb;
     }
 
-	public function getTagsQueryBuilder()
+    public function getTagsQueryBuilder()
     {
         return $this
             ->createQueryBuilder('tag')
             ->orderBy('tag.name', 'ASC')
         ;
     }
+
+    /**
+     * extractQuery
+     *
+     * @param array $params
+     * @return Query
+     */
+    public function extractQuery($params)
+    {
+        $qb = $this->extractQueryBuilder($params);
+
+        return is_null($qb) ? $qb : $qb->getQuery();
+    }
+
+    /**
+     * extract
+     *
+     * @param array $params
+     * @return DoctrineCollection
+     */
+    public function extract($params)
+    {
+        $q = $this->extractQuery($params);
+        
+        return is_null($q) ? array() : $q->getResult();
+    }
+
 }
+

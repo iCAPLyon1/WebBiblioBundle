@@ -10,5 +10,5 @@
 </div>
 
 {% block javascripts %}
-    <script type='text/javascript'>var searchTagsUrl = "{{ path("web_biblio_api_search_tag") }}";</script>
+    <script type='text/javascript'>var searchTagsUrl = "{{ path("exporter_api", {'entity_reference':'tag', '_format':'json'}) }}";</script>
 {% endblock %}

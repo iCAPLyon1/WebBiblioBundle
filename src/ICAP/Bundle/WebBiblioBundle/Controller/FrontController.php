@@ -25,13 +25,15 @@ class FrontController extends Controller
     /**
      * @Route("/", name="web_biblio_index", defaults={"page" = 1})
      * @Route("/{page}", name="web_biblio_userlist", requirements={"page" = "\d+"}, defaults={"page" = 1})
+     * @Route("/byId/{id}", name="web_biblio_userlist_by_id", requirements={"id" = "\d+"}, defaults={"page" = 1, "id" = -1})
      * @Template()
      */
     public function userlistAction($page)
     {
         $logger = $this->get('logger');
         $logger->debug('userlistAction()');
-        
+
+
         $username = $this->getUser()->getEmail();
         $logger->debug('username: '.$username);
 
@@ -39,6 +41,7 @@ class FrontController extends Controller
         $pager    = new PagerFanta($adapter);
 
         $pager->setMaxPerPage($this->container->getParameter('nb_web_link_by_page'));
+
 
         try {
             $pager->setCurrentPage($page);
