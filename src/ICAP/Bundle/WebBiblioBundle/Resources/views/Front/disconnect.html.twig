@@ -1,5 +1,8 @@
 <div class="connectBlock">
     <div class="connectHeader">
+        {% if gravatar_exists(app.user.email) %}
+            <img src="{{ gravatar(app.user.email) }}" />
+        {% endif %}
         Hello {{app.user.username}} <a href="{{ path('fos_user_security_logout') }}">Disconnect</a>
     </div>
     <ul>

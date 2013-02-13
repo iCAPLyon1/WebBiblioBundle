@@ -27,7 +27,8 @@
         "sonata-project/admin-bundle": "dev-master",
         "sonata-project/jquery-bundle": "dev-master",
         "sonata-project/block-bundle": "dev-master",
-        "sonata-project/cache-bundle": "dev-master"
+        "sonata-project/cache-bundle": "dev-master",
+        "ornicar/gravatar-bundle" : "dev-master"
     },
     "scripts": {
         "post-install-cmd": [
