@@ -209,6 +209,7 @@ class Manager
         $this->getEntityManager()->flush();
 
         $this->logger->debug('end and flush updateWebLink()');
+        return $webLink;
     }
 
     /**
