@@ -71,6 +71,33 @@ class FrontController extends Controller
         );
     }
 
+    
+    /**
+     * @Route("/all", name="web_biblio_all", defaults={"page" = 1})
+     * @Route("/all/{page}", name="web_biblio_all_paginated", requirements={"page" = "\d+"}, defaults={"page" = 1})
+     * @Template()
+     */
+    public function allAction($page)
+    {
+        $logger = $this->get('logger');
+        $logger->debug('allAction()');
+
+        $adapter  = new DoctrineORMAdapter($this->get("icap_webbiblio.manager")->getPublishedWebLinksQueryBuilder());
+        $pager    = new PagerFanta($adapter);
+
+        $pager->setMaxPerPage($this->container->getParameter('nb_web_link_by_page'));
+
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $e) {
+            throw new NotFoundHttpException();
+        }
+
+        return array(
+            'pager' => $pager
+        );
+    }
+
     /**
      * @Route("/add", name="web_biblio_add")
      * @Method({"POST"})

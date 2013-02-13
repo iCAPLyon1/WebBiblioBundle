@@ -1,0 +1,61 @@
+{% extends "ICAPWebBiblioBundle::base.html.twig" %}
+
+{% block title %}
+    {{parent()}} : vos liens
+{% endblock %}
+
+{% block content %}
+    
+    {% include 'ICAPWebBiblioBundle:Front:disconnect.html.twig' %}
+    {% include 'ICAPWebBiblioBundle:Front:flashmessage.html.twig' %}
+    <div class="webLinkListBlock">  
+        <div class="listHeader">Here you can find all webLinks</div>
+            
+        <ul id="link-list">
+
+        {# On affiche les pages : "Précédent 1 2 3 ... 4 5 Suivant" #}
+        {% if pager.haveToPaginate %}
+            {{ pagerfanta(pager, 'twitter_bootstrap', {'proximity' : 1, 'routeName': 'web_biblio_all_paginated'}) }}
+        {% endif %}
+
+        {# On boucle sur le pager contenant nos news paginées #}
+        {% for webLink in pager.currentPageResults %}
+             <li>
+                {% if is_granted('EDIT', webLink) %}
+                    <form method="POST" action="{{ path('web_biblio_remove', { 'id': webLink.id}) }}">
+                        <input border="0" title="Delete" src="{{ asset('bundles/icapwebbiblio/images/cancel.png') }}" type="image" value="submit" align="middle" />
+                    </form> 
+                    {% if webLink.published %}
+                    <form method="POST" action="{{ path('web_biblio_publish', { 'id': webLink.id, 'value': '0' }) }}">
+                        <input border="0" title="Unpublish" src="{{ asset('bundles/icapwebbiblio/images/accept.png') }}" type="image" value="submit" align="middle" > 
+                    {% else %}
+                    <form method="POST" action="{{ path('web_biblio_publish', { 'id': webLink.id, 'value': '1' }) }}">
+                        <input border="0" title="Publish" src="{{ asset('bundles/icapwebbiblio/images/delete.png') }}" type="image" value="submit" align="middle" > 
+                    {% endif %}
+                {% endif %}
+                
+                
+                
+                    <a href="{{ webLink.url }}" target="_blank">{{ webLink.url }}</a>
+                    <span class="webLinkTags">[
+                    {% for tag in webLink.tags %} 
+                        {{ tag.name }}{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                    ]</span>
+
+                    <span>| {{ webLink.username }}</span>
+
+                    <br/>
+                </form>
+            </li>
+        {% else %}
+          <p>Oupss! No web links yet !</p>
+        {% endfor %}
+
+        {# On ré-affiche les pages dans un souci d'ergonomie: "Précédent 1 2 3 ... 4 5 Suivant" #}
+        {% if pager.haveToPaginate %}
+            {{ pagerfanta(pager, 'twitter_bootstrap', {'proximity' : 1, 'routeName': 'web_biblio_all_paginated'}) }}
+        {% endif %}
+    </div>
+{% endblock %}
+

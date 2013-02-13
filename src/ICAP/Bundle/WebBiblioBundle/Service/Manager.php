@@ -251,8 +251,6 @@ class Manager
         if (false === $this->securityContext->isGranted('EDIT', $webLink))
         {
             throw new AccessDeniedException();
-        }else {
-            die("acces granted");
         }
     }
 
@@ -270,6 +268,16 @@ class Manager
         }else {
             return null;
         }
+    }
+
+    /**
+     * Retrieve all Published WebLinks 
+     *
+     * @return Query
+     */
+    public function getPublishedWebLinksQueryBuilder() 
+    {
+        return $this->getWebLinkRepository()->getPublishedWebLinksQueryBuilder();
     }
 
     /**
