@@ -1,13 +1,7 @@
 idci_exporter:
-<<<<<<< HEAD
-    entities
-        entity_reference:
-            class: "ICAP\\Bundle\\WebBiblioBundle\\Entity\\WebLink"
-=======
     entities:
         tag:
             class: "ICAP\\Bundle\\WebBiblioBundle\\Entity\\Tag"
->>>>>>> cb446d383eacfea77db1299777cad8a40ab385c4
             formats:
                 jsonp:
                     transformer:

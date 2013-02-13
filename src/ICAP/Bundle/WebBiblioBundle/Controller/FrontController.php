@@ -74,8 +74,7 @@ class FrontController extends Controller
         $webLink->setUsername($username);
 
         if ($form->isValid()) {
-            $webLink = 
-            $webLinks = $this->get("icap_webbiblio.manager")->updateWebLink($webLink);
+            $webLink = $this->get("icap_webbiblio.manager")->updateWebLink($webLink);
             $request->getSession()->getFlashBag()->add('icap_webbiblio_success', 'WebLink added!');
         } else{
             //Display error!
