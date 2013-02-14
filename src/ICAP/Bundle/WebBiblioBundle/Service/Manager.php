@@ -248,7 +248,7 @@ class Manager
     public function verifIsOwnerForWebLink($webLink) 
     {
         // check for edit access
-        if (false === $this->securityContext->isGranted('EDIT', $webLink))
+        if (false === $this->securityContext->isGranted('EDIT', $webLink) and false === $this->securityContext->isGranted('ROLE_ADMIN'))
         {
             throw new AccessDeniedException();
         }
