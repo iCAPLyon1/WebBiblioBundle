@@ -21,14 +21,17 @@ class AppKernel extends Kernel
             new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
 
             new ICAP\Bundle\WebBiblioBundle\ICAPWebBiblioBundle(),
-
+            new Application\Sonata\UserBundle\ApplicationSonataUserBundle(),
+            
             new IDCI\Bundle\ExporterBundle\IDCIExporterBundle(),
             new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
             new FOS\UserBundle\FOSUserBundle(),
             new Sonata\BlockBundle\SonataBlockBundle(),
             new Sonata\jQueryBundle\SonatajQueryBundle(),
             new Sonata\AdminBundle\SonataAdminBundle(),
+            new Sonata\UserBundle\SonataUserBundle('FOSUserBundle'),
             new Sonata\DoctrineORMAdminBundle\SonataDoctrineORMAdminBundle(),
+            new Sonata\EasyExtendsBundle\SonataEasyExtendsBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
             new Ornicar\GravatarBundle\OrnicarGravatarBundle(),
         );

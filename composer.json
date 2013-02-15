@@ -22,12 +22,16 @@
         "idci/exporter-bundle": "dev-master",
         "pagerfanta/pagerfanta": "dev-master",
         "white-october/pagerfanta-bundle": "dev-master",
-        "friendsofsymfony/user-bundle": "*",
+        "friendsofsymfony/user-bundle": "dev-master",
         "sonata-project/doctrine-orm-admin-bundle": "dev-master",
         "sonata-project/admin-bundle": "dev-master",
         "sonata-project/jquery-bundle": "dev-master",
+        "sonata-project/user-bundle": "dev-master",
         "sonata-project/block-bundle": "dev-master",
         "sonata-project/cache-bundle": "dev-master",
+        "sonata-project/doctrine-extensions": "dev-master",
+        "sonata-project/easy-extends-bundle": "dev-master",
+        "sonata-project/google-authenticator": "dev-master",
         "ornicar/gravatar-bundle" : "dev-master"
     },
     "scripts": {
