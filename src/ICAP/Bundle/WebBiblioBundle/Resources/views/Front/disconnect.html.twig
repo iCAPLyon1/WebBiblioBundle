@@ -1,19 +1,40 @@
-{% if is_granted('IS_AUTHENTICATED_FULLY') %}
-    <div class="connectBlock">
-        <div class="connectHeader">
-            {% if gravatar_exists(app.user.email) %}
-                <img src="{{ gravatar(app.user.email) }}" />
-            {% endif %}
-            Hello {{app.user.username}} <a href="{{ path('fos_user_security_logout') }}">Disconnect</a>
-            {% if is_granted('ROLE_ADMIN') %}
-                | 
-                <a href="{{ path('sonata_admin_dashboard') }}">Admin dashboard</a> 
-            {% endif %}
-        </div>
-        <ul>
-            {% for role in app.user.roles %}
-                <li>{{role}}</li>
-            {% endfor %}
+<div class="">
+  {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <div class="navbar">
+      <div class="navbar-inner">
+        <ul class="nav">
+          <li>
+            <a>
+              Hello {{app.user}}
+            </a>
+          </li>
+          <li {% if app.request.get('_route') == 'web_biblio_all' or app.request.get('_route') == 'web_biblio_all_paginated' %}class="active"{% endif %}><a href="{{ path('web_biblio_all') }}">All</a></li>
+          <li {% if app.request.get('_route') == 'web_biblio_userlist' or app.request.get('_route') == 'web_biblio_index' %}class="active"{% endif %}><a href="{{ path('web_biblio_userlist') }}">Yours</a></li>
+          {% if is_granted('ROLE_ADMIN') %} 
+            <li {% if app.request.get('_route') == 'sonata_admin_dashboard' %}class="active"{% endif %}><a href="{{ path('sonata_admin_dashboard') }}">admin dashboard</a> </li>
+          {% endif %}
+
         </ul>
+        <ul class="nav pull-right">
+          <li class="divider-vertical"></li>
+          <li><a href="{{ path('fos_user_security_logout') }}">&times; disconnect</a></li>
+        </ul>
+      </div>
     </div>
-{% endif %}
+    {#
+    <div>
+      Your roles:
+      <ul>
+        {% for role in app.user.roles %}
+          <li>{{role}}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    #}
+  
+  {% else %}
+    <div class="connectHeader">
+      You're not logged: <a href="{{ path('fos_user_security_login') }}">login here</a> 
+    </div>
+  {% endif %}
+</div>

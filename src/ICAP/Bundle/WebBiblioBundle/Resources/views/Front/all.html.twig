@@ -21,7 +21,7 @@
         {# On boucle sur le pager contenant nos news paginées #}
         {% for webLink in pager.currentPageResults %}
              <li>
-                {% if is_granted('EDIT', webLink) or is_granted('ROLE_ADMIN') %}
+                {# {% if is_granted('EDIT', webLink) or is_granted('ROLE_ADMIN') %} #}
                     <form method="POST" action="{{ path('web_biblio_remove', { 'id': webLink.id}) }}">
                         <input border="0" title="Delete" src="{{ asset('bundles/icapwebbiblio/images/cancel.png') }}" type="image" value="submit" align="middle" />
                     </form> 
@@ -32,7 +32,7 @@
                     <form method="POST" action="{{ path('web_biblio_publish', { 'id': webLink.id, 'value': '1' }) }}">
                         <input border="0" title="Publish" src="{{ asset('bundles/icapwebbiblio/images/delete.png') }}" type="image" value="submit" align="middle" > 
                     {% endif %}
-                {% endif %}
+                {# {% endif %} #}
 
                     <a href="{{ webLink.url }}" target="_blank">{{ webLink.url }}</a>
                     <span class="webLinkTags">[

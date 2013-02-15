@@ -18,13 +18,12 @@ use Symfony\Component\Security\Core\SecurityContext;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
- * @Route("/web-biblio")
+ * @Route("/")
  */
 class FrontController extends Controller
 {
-    /**Method that redirects to page given a weblink Id
-     *
-     *
+    /**
+     * Method that redirects to page given a weblink Id
      */
     protected function goToPageByWebLinkId($username, $id)
     {
@@ -40,8 +39,37 @@ class FrontController extends Controller
     }
 
     /**
-     * @Route("/", name="web_biblio_index", defaults={"page" = 1})
-     * @Route("/{page}", name="web_biblio_userlist", requirements={"page" = "\d+"}, defaults={"page" = 1})
+     * @Route("/", name="web_biblio_all", defaults={"page" = 1})
+     * @Route("/{page}", name="web_biblio_all_paginated", requirements={"page" = "\d+"}, defaults={"page" = 1})
+     * @Method({"GET"})
+     * @Template()
+     */
+    public function allAction($page)
+    {
+        $logger = $this->get('logger');
+        $logger->debug('allAction()');
+
+        $adapter  = new DoctrineORMAdapter($this->get("icap_webbiblio.manager")->getPublishedWebLinksQueryBuilder());
+        $pager    = new PagerFanta($adapter);
+
+        $pager->setMaxPerPage($this->container->getParameter('nb_web_link_by_page'));
+
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $e) {
+            throw new NotFoundHttpException();
+        }
+
+        return array(
+            'pager' => $pager
+        );
+    }
+
+
+    /**
+     * @Route("/web-biblio", name="web_biblio_index", defaults={"page" = 1})
+     * @Route("/web-biblio/{page}", name="web_biblio_userlist", requirements={"page" = "\d+"}, defaults={"page" = 1})
+     * @Method({"GET"})
      * @Template()
      */
     public function userlistAction($page)
@@ -71,35 +99,8 @@ class FrontController extends Controller
         );
     }
 
-    
     /**
-     * @Route("/all", name="web_biblio_all", defaults={"page" = 1})
-     * @Route("/all/{page}", name="web_biblio_all_paginated", requirements={"page" = "\d+"}, defaults={"page" = 1})
-     * @Template()
-     */
-    public function allAction($page)
-    {
-        $logger = $this->get('logger');
-        $logger->debug('allAction()');
-
-        $adapter  = new DoctrineORMAdapter($this->get("icap_webbiblio.manager")->getPublishedWebLinksQueryBuilder());
-        $pager    = new PagerFanta($adapter);
-
-        $pager->setMaxPerPage($this->container->getParameter('nb_web_link_by_page'));
-
-        try {
-            $pager->setCurrentPage($page);
-        } catch (NotValidCurrentPageException $e) {
-            throw new NotFoundHttpException();
-        }
-
-        return array(
-            'pager' => $pager
-        );
-    }
-
-    /**
-     * @Route("/add", name="web_biblio_add")
+     * @Route("/web-biblio/add", name="web_biblio_add")
      * @Method({"POST"})
      * @Template()
      */
@@ -127,7 +128,7 @@ class FrontController extends Controller
     }
 
     /**
-     * @Route("/remove/{id}", requirements={"id" = "\d+"}, name="web_biblio_remove")
+     * @Route("/web-biblio/remove/{id}", requirements={"id" = "\d+"}, name="web_biblio_remove")
      * @Method({"POST", "DELETE"})
      * @Template()
      */
@@ -152,7 +153,7 @@ class FrontController extends Controller
     }
 
     /**
-     * @Route("/publish/{id}/{value}", requirements={"id" = "\d+", "value" = "0|1"}, name="web_biblio_publish")
+     * @Route("/web-biblio/publish/{id}/{value}", requirements={"id" = "\d+", "value" = "0|1"}, name="web_biblio_publish")
      * @Method({"POST"})
      * @Template()
      */

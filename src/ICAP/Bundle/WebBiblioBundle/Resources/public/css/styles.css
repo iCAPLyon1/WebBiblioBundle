@@ -1,10 +1,13 @@
 body{
     margin: 0;
     padding: 0;
-    background-color:#efefef;
-    font-family:'Verdana';
     font-size: 11pt;
     line-height: 60px;
+}
+
+.clear
+{
+    clear: both;
 }
 
 .header 
@@ -20,7 +23,7 @@ body{
     color: white;
     text-shadow: #fff 0px 1px 0, #000 0 -3px 0;
     font-size: 40pt;
-
+    float: left;
     /*font-weight: bold;*/
 }
 
@@ -92,6 +95,12 @@ body{
         line-height: 20pt;
         color: #333;
         text-shadow: 1px 1px 1px #AAA;
+    }
+
+    .connectBlock .connectHeader li {
+        font-family: Arial;
+        font-size: 11pt;
+        line-height: 15pt;
     }
 
 /*
