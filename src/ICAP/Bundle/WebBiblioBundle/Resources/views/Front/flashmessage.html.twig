@@ -1,7 +1,17 @@
-<div class="flashmessage">
-    {% if app.session %}
-        {% for key, flash in app.session.getFlashes() %}
-            <div class="{{key}}">{{ flash }}</div>
-        {% endfor %}
-    {% endif %}
-</div>
+{% if app.session %}
+    {% for key, flash in app.session.getFlashes() %}
+        
+        {% if key == 'icap_webbiblio_success' %}
+            <div class="alert alert-success">
+                <strong>Well done!</strong>
+        {% elseif key == 'icap_webbiblio_error' %}
+            <div class="alert alert-error">
+                <strong>Holy crap!</strong>
+        {% else %}
+            <div class="alert alert-info">
+                <strong>Heads up!</strong>
+        {% endif %}
+            {{ flash }}
+        </div>
+    {% endfor %}
+{% endif %}

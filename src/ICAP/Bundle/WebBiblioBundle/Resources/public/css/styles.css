@@ -1,8 +1,6 @@
 body{
     margin: 0;
     padding: 0;
-    font-size: 11pt;
-    line-height: 60px;
 }
 
 .clear
@@ -24,14 +22,13 @@ body{
     text-shadow: #fff 0px 1px 0, #000 0 -3px 0;
     font-size: 40pt;
     float: left;
+    line-height: 60px;
+    margin-right: 20px;
     /*font-weight: bold;*/
 }
 
-.flashmessage {
-    font-family: Arial;
-    font-size: 18pt;
-    line-height: 20pt;
-    text-shadow: 1px 1px 1px #AAA;
+.alert {
+    margin: 20px;
 }
 
 .icap_webbiblio_success {
@@ -111,11 +108,17 @@ body{
     display: inline;
     margin-right: 10px;
  }
- 
- #link-list li form{
-	display:inline;
- }
- 
+
+.login-form
+{
+    margin: 20px;
+}
+
+.table-inline form
+{
+    display:inline;
+}
+
  #link-list {
 	list-style-type: square;
  }

@@ -9,7 +9,7 @@
             </a>
           </li>
           <li {% if app.request.get('_route') == 'web_biblio_all' or app.request.get('_route') == 'web_biblio_all_paginated' %}class="active"{% endif %}><a href="{{ path('web_biblio_all') }}">All</a></li>
-          <li {% if app.request.get('_route') == 'web_biblio_userlist' or app.request.get('_route') == 'web_biblio_index' %}class="active"{% endif %}><a href="{{ path('web_biblio_userlist') }}">Yours</a></li>
+          <li {% if app.request.get('_route') == 'web_biblio_userlist' or app.request.get('_route') == 'web_biblio_index' %}class="active"{% endif %}><a href="{{ path('web_biblio_userlist') }}">Mine</a></li>
           {% if is_granted('ROLE_ADMIN') %} 
             <li {% if app.request.get('_route') == 'sonata_admin_dashboard' %}class="active"{% endif %}><a href="{{ path('sonata_admin_dashboard') }}">admin dashboard</a> </li>
           {% endif %}
