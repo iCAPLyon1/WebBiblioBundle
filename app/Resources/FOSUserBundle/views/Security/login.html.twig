@@ -4,21 +4,46 @@
 {% if error %}
     <div class="alert">{{ error|trans({}, 'FOSUserBundle') }}</div>
 {% endif %}
-  
-  <form action="{{ path("fos_user_security_check") }}" method="post" class="form-inline login-form">
-    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+    <div class="webLinkCenterBlock">
+        <form action="{{ path("fos_user_security_check") }}" method="post" class="form-horizontal web-biblio-form">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
 
-    <input type="text" id="username" name="_username" value="{{ last_username }}" required="required" class="input" placeholder="Login or email" />
+            <div class="control-group">
+                <label class="control-label" for="username">Login or email</label>
+                <div class="controls">
+                    <input type="text" id="username" name="_username" value="{{ last_username }}" required="required" class="input" placeholder="login or email" />
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <label class="control-label" for="password">Password</label>
+                <div class="controls">
+                    <input type="password" id="password" name="_password" required="required" class="input" placeholder="password" />
+                </div>
+            </div>
 
-    <input type="password" id="password" name="_password" required="required" class="input" placeholder="Password" />
+            <div class="control-group">
+                <div class="controls">
+                    <label class="label-weblink-checkbox">
+                        <input type="checkbox" id="remember_me" name="_remember_me" value="on" class="input-weblink-checkbox" /> Remember me 
+                    </label>
+                </div>
+            </div>
 
-    <label class="checkbox">
-      <input type="checkbox" id="remember_me" name="_remember_me" value="on" /> Remember me 
-    </label>
+            <div class="control-group">
+                <div class="controls">
+                    <input type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}" class="btn"/>
+                </div>
+            </div>
 
-    <input type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}" class="btn"/>
-    
-    <a class="btn btn-primary" href="{{ path("fos_user_registration_register") }}">Create account</a>
-  </form>
-  
+            <br/>
+
+            <div class="control-group">
+                <label class="control-label">Or</label>
+                <div class="controls">
+                    <a class="btn btn-primary" href="{{ path("fos_user_registration_register") }}">Create account</a>
+                </div>
+            </div>
+        </form>
+    </div>      
 {% endblock fos_user_content %}

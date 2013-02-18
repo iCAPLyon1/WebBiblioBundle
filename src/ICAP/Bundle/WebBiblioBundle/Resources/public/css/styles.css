@@ -1,4 +1,5 @@
-body{
+body
+{
     margin: 0;
     padding: 0;
 }
@@ -17,7 +18,8 @@ body{
     -webkit-box-shadow: inset 0px -3px 8px #000;
     box-shadow: inset 0px -3px 8px #000;
 }
-.header .title {
+.header .title 
+{
     color: white;
     text-shadow: #fff 0px 1px 0, #000 0 -3px 0;
     font-size: 40pt;
@@ -27,66 +29,92 @@ body{
     /*font-weight: bold;*/
 }
 
-.alert {
+.alert 
+{
     margin: 20px;
 }
 
-.icap_webbiblio_success {
-    margin: 25px;
-    color: green;
+input.input-weblink-url
+{
+    width: 386px;
+    padding: 5px 7px;
 }
 
-.icap_webbiblio_error {
-    margin: 25px;
-    color: red;
+input.input-weblink-checkbox
+{
+    margin-top: 0px; 
+    margin-bottom: 3px
 }
 
-.webLinkListBlock {
+label.label-weblink-checkbox
+{
+    margin-bottom: 0px; 
+    margin-top:3px;
+}
+
+.webLinkListBlock 
+{
     margin: 25px;
 }
 
-    .webLinkListBlock .listHeader {
+    .webLinkListBlock .listHeader 
+    {
         font-family: Arial;
         font-size: 18pt;
         color: #333;
         text-shadow: 1px 1px 1px #AAA;
     }
 
-    .webLinkListBlock ul li{
+    .webLinkListBlock ul li
+    {
         font-size: 13pt;
         padding-bottom: 16px;
     }
-                .webLinkListBlock ul li a{
-                    text-indent: 10px;
-                    font-color: #0e57d1;
-                }
-                
-                .webLinkListBlock ul li a:hover{
-                    font-color: #6699BB;
-                }
-                
-                .webLinkTags {
-                    color: #76ac0b;
-                    font-size: 8pt;
-                }
+        .webLinkListBlock ul li a
+        {
+            text-indent: 10px;
+            font-color: #0e57d1;
+        }
+        
+        .webLinkListBlock ul li a:hover
+        {
+            font-color: #6699BB;
+        }
+ 
+.webLinkCenterBlock
+{
+    margin: 25px auto;
+    width: 500px;
+}
 
-.addNewWebLinkBlock {
+.webLinkTags 
+{
+    color: #76ac0b;
+    font-size: 8pt;
+}
+
+.addNewWebLinkBlock 
+{
     margin: 25px;
 }
-    .addNewWebLinkBlock .addHeader {
+    .addNewWebLinkBlock .addHeader 
+    {
         font-family: Arial;
         font-size: 18pt;
         color: #333;
         text-shadow: 1px 1px 1px #AAA;
     }
-        #icap_bundle_webbibliobundle_weblinktype>div {
+        #icap_bundle_webbibliobundle_weblinktype>div 
+        {
             line-height: 35px;
         }
 
-.connectBlock {
+.connectBlock 
+{
     margin: 25px;
 }
-    .connectBlock .connectHeader {
+    .connectBlock .connectHeader 
+    {
         font-family: Arial;
         font-size: 18pt;
         line-height: 20pt;
@@ -94,7 +122,8 @@ body{
         text-shadow: 1px 1px 1px #AAA;
     }
 
-    .connectBlock .connectHeader li {
+    .connectBlock .connectHeader li 
+    {
         font-family: Arial;
         font-size: 11pt;
         line-height: 15pt;
@@ -104,12 +133,13 @@ body{
  * Surcharge Bootstrap
  */
 
- label {
+ label 
+ {
     display: inline;
     margin-right: 10px;
  }
 
-.login-form
+.web-biblio-form
 {
     margin: 20px;
 }
@@ -119,6 +149,7 @@ body{
     display:inline;
 }
 
- #link-list {
+ #link-list 
+ {
 	list-style-type: square;
  }

@@ -118,10 +118,10 @@ class FrontController extends Controller
        
         if ($form->isValid()) {
             $webLink = $this->get("icap_webbiblio.manager")->updateWebLink($webLink);
-            $request->getSession()->getFlashBag()->add('icap_webbiblio_success', 'WebLink added!');
+            $request->getSession()->getFlashBag()->add('icap_webbiblio_success', 'WebLink saved!');
         } else{
             //Display error!
-            $request->getSession()->getFlashBag()->add('icap_webbiblio_error', 'Invalid form! WebLink not added...');
+            $request->getSession()->getFlashBag()->add('icap_webbiblio_error', 'Invalid form! WebLink not saved...');
         }
         
         return $this->goToPageByWebLinkId($username, $webLink->getId());

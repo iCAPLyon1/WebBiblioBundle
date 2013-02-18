@@ -48,8 +48,12 @@
                             </form>
                         </td>
                         <td>
-                            {% if app.user.email == webLink.username %}
-                                Me
+                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                {% if app.user.email == webLink.username %}
+                                    Me
+                                {% else %}
+                                    {{ webLink.username }}
+                                {% endif %}
                             {% else %}
                                 {{ webLink.username }}
                             {% endif %}

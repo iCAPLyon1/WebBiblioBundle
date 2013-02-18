@@ -13,10 +13,10 @@ class WebLinkType extends AbstractType
         $builder
             ->add('url', 'url')
             //->add('username', 'email')
-            ->add('published', 'checkbox', array(
+            ->add('tags', 'icap_bundle_webbibliobundle_tagstype', array(
                 'required'  => false,
             ))
-            ->add('tags', 'icap_bundle_webbibliobundle_tagstype', array(
+            ->add('published', 'checkbox', array(
                 'required'  => false,
             ))
         ;
