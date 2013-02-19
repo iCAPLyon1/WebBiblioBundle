@@ -1,0 +1,24 @@
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+       <service id="sonata.admin.weblink" class="ICAP\Bundle\WebBiblioBundle\Admin\WebLinkAdmin">
+          <tag name="sonata.admin" manager_type="orm" group="Objects" label="Weblinks"/>
+          <argument />
+          <argument>ICAP\Bundle\WebBiblioBundle\Entity\WebLink</argument>
+          <argument>SonataAdminBundle:CRUD</argument>
+          <call method="setTranslationDomain">
+              <argument>ICAPWebBiblioBundle</argument>
+          </call>
+      </service>
+      <service id="sonata.admin.tag" class="ICAP\Bundle\WebBiblioBundle\Admin\TagAdmin">
+          <tag name="sonata.admin" manager_type="orm" group="Objects" label="Tags"/>
+          <argument />
+          <argument>ICAP\Bundle\WebBiblioBundle\Entity\Tag</argument>
+          <argument>SonataAdminBundle:CRUD</argument>
+          <call method="setTranslationDomain">
+              <argument>ICAPWebBiblioBundle</argument>
+          </call>
+      </service>
+   </services>
+</container>

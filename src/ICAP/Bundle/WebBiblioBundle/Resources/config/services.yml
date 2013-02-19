@@ -1,4 +1,22 @@
 services: 
     icap_webbiblio.manager: 
         class: ICAP\Bundle\WebBiblioBundle\Service\Manager
-        arguments: [@doctrine.orm.entity_manager, @logger]
+        arguments: [@doctrine.orm.entity_manager, @logger, @security.acl.provider, @security.context]
+
+    icap_webbiblio.type.icap_bundle_webbibliobundle_tagstype:
+        class: ICAP\Bundle\WebBiblioBundle\Form\TagsType
+        arguments: []
+        tags:
+            - { name: form.type, alias: icap_bundle_webbibliobundle_tagstype }
+
+    icap.webbiblio.admin.tag:
+        class: ICAP\Bundle\WebBiblioBundle\Admin\TagAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Objects, label: Tags }
+        arguments: [null, ICAP\Bundle\WebBiblioBundle\Entity\Tag, SonataAdminBundle:CRUD]
+
+    icap.webbiblio.admin.weblink:
+        class: ICAP\Bundle\WebBiblioBundle\Admin\WebLinkAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: Objects, label: Weblinks }
+        arguments: [null, ICAP\Bundle\WebBiblioBundle\Entity\WebLink, SonataAdminBundle:CRUD]

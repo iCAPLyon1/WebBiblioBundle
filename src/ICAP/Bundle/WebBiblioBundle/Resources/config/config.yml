@@ -1,6 +1,16 @@
 idci_exporter:
     entities:
-        "ICAP\\Bundle\\WebBiblioBundle\\Entity\\WebLink":
+        tag:
+            class: "ICAP\\Bundle\\WebBiblioBundle\\Entity\\Tag"
             formats:
                 jsonp:
-                    template_name_format: "export.json.twig"
+                    transformer:
+                        options:
+                            template_name_format: "export.json.twig"
+        weblink:
+            class: "ICAP\\Bundle\\WebBiblioBundle\\Entity\\WebLink"
+            formats:
+                jsonp:
+                    transformer:
+                        options:
+                            template_name_format: "export.json.twig"

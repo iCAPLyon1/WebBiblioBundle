@@ -1,0 +1,10 @@
+<div class="header">
+  <div class="clear"></div>
+  {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    {% if gravatar_exists(app.user.email) %}
+      <div class="title"><img class="img-polaroid" src="{{ gravatar(app.user.email, 90) }}"/></div>
+    {% endif %}
+  {% endif %}
+  <div class="title">WebBiblio<small>(theque)</small></div>
+  <div class="clear"></div>
+</div>

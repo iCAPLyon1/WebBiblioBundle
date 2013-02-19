@@ -1,10 +1,44 @@
 <div class="addNewWebLinkBlock">
-
-
-    <div class="addHeader">Here you can create a new weblink:</div>
+    <div class="page-header">
+        <h1> Create or update:</h1>
+    </div>
     
-    <form method="POST" action="{{ path("web_biblio_add") }}">
-        {{ form_widget(form) }}
-        <input type="submit" value="Submit" />
+    <form method="POST" action="{{ path("web_biblio_add") }}" class="form-horizontal web-biblio-form">
+        <div class="control-group">
+            <label class="control-label" for="icap_bundle_webbibliobundle_weblinktype_url">Url</label>
+            <div class="span3">
+                {{ form_widget(form.url, {'attr': {'class': 'input input-weblink-url'}}) }}
+            </div>
+            
+            
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="token-input-icap_bundle_webbibliobundle_weblinktype_tags">Tags</label>
+            <div class="span3">
+                {{ form_widget(form.tags, {'attr': {'class': 'input span3'}}) }}
+            </div>
+                
+        </div>
+        <div class="control-group">
+            <label class="control-label"></label>
+            <div class="span3">
+                <label style="label-weblink-checkbox">
+                    {{ form_widget(form.published, {'attr': {'class': 'input-weblink-checkbox'}}) }}
+                    Published
+                </label>
+            </div>
+        </div>
+        {# Add hidden inputs (csrf protection, etc...) #}
+        {{ form_rest(form) }}
+        <div class="control-group">
+            <label class="control-label"></label>
+            <div class="span3">
+                <input type="submit" class="btn" value="Create"/>
+            </div>
+        </div>
     </form>
 </div>
+
+{% block javascripts %}
+    <script type='text/javascript'>var searchTagsUrl = "{{ path("exporter_api", {'entity_reference':'tag', '_format':'json'}) }}";</script>
+{% endblock %}

@@ -59,3 +59,54 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+# SSO Configuration
+#be_simple_sso_auth:
+#    admin_sso:
+#        protocol:
+#            id: cas
+#            version: 2
+#        server:
+#            id: cas
+#            login_url: https://cas.univ-lyon1.fr:443/cas/login
+#            logout_url: https://cas.univ-lyon1.fr:443/cas/logout
+#            validation_url: https://cas.univ-lyon1.fr:443/cas/serviceValidate
+
+fos_user:
+    db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
+    firewall_name: main
+    user_class: Application\Sonata\UserBundle\Entity\User
+    group:
+        group_class: Application\Sonata\UserBundle\Entity\Group
+
+sonata_block:
+    default_contexts: [cms]
+    blocks:
+        sonata.admin.block.admin_list:
+            contexts:   [admin]
+
+        sonata.block.service.text:
+        sonata.block.service.rss:
+
+ornicar_gravatar:
+    rating: g
+    size: 40
+    default: mm
+
+sonata_admin:
+    title: WebBiblio Admin
+    templates:
+        # default global templates
+        layout: SonataAdminBundle::standard_layout.html.twig
+        ajax: SonataAdminBundle::ajax_layout.html.twig
+        # default actions templates, should extend a global templates
+        list: SonataAdminBundle:CRUD:list.html.twig
+        show: SonataAdminBundle:CRUD:show.html.twig
+        edit: SonataAdminBundle:CRUD:edit.html.twig
+    dashboard:
+        blocks:
+            # display a dashboard block
+            - { position: left, type: sonata.admin.block.admin_list }
+parameters:
+    sonata.user.admin.user.class:   Application\Sonata\UserBundle\Admin\UserAdmin
+    sonata.user.admin.group.class:  Application\Sonata\UserBundle\Admin\GroupAdmin

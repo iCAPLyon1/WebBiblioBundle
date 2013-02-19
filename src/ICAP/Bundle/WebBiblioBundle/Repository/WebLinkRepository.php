@@ -15,7 +15,7 @@ class WebLinkRepository extends EntityRepository
     const TAGNAMES_PROPERTY = "tagnames";
     const USERNAME_PROPERTY = "usernames";
 
-    public function customSearch($params)
+    public function extractQueryBuilder($params)
     {
         $qb = $this->getPublishedWebLinksQueryBuilder();
         foreach ($params as $key => $value) {
@@ -25,7 +25,7 @@ class WebLinkRepository extends EntityRepository
                     ->andWhere(
                         $qb
                             ->expr()
-                            ->in('tag.name', $value)
+                            ->in('tag.name', "'".$value."'")
                     )
                 ;
             }else if($key == self::USERNAME_PROPERTY){
@@ -33,13 +33,39 @@ class WebLinkRepository extends EntityRepository
                     ->andWhere(
                         $qb
                             ->expr()
-                            ->in('weblink.username', $value)
+                            ->in('weblink.username', "'".$value."'")
                     )
                 ;
             } 
         }
 
-        return $qb->getQuery()->getResult();
+        return $qb;
+    }
+
+    /**
+     * extractQuery
+     *
+     * @param array $params
+     * @return Query
+     */
+    public function extractQuery($params)
+    {
+        $qb = $this->extractQueryBuilder($params);
+
+        return is_null($qb) ? $qb : $qb->getQuery();
+    }
+
+    /**
+     * extract
+     *
+     * @param array $params
+     * @return DoctrineCollection
+     */
+    public function extract($params)
+    {
+        $q = $this->extractQuery($params);
+        
+        return is_null($q) ? array() : $q->getResult();
     }
 
     public function getPublishedWebLinksQueryBuilder()
@@ -68,6 +94,20 @@ class WebLinkRepository extends EntityRepository
             ->createQueryBuilder('webLink')
             ->andWhere('webLink.username = :username')
             ->setParameter('username', $username)
+            ->orderBy('webLink.id','ASC')
         ;
+    }
+
+    public function getWebLinkIndexInList($username, $weblinkId)
+    {
+        $q = $this
+            ->getWebLinksQueryBuilderForUsername($username)
+            ->select('count(webLink.id) as total')
+            ->andWhere('webLink.id <= :weblinkId')
+            ->setParameter('weblinkId', $weblinkId)
+            
+        ;
+
+        return $q->getQuery()->getSingleScalarResult();
     }
 }

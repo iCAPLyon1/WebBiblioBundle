@@ -1,39 +1,48 @@
-<div class="webLinkListBlock">  
-    <div class="listHeader">Here you can find the list of your webLinks</div>
-        
-    <ul id="link-list">
+<div class="webLinkListBlock"> 
+    <div class="page-header">
+        <h1> My web links </h1>
+    </div>
 
     {# On affiche les pages : "Précédent 1 2 3 ... 4 5 Suivant" #}
     {% if pager.haveToPaginate %}
-        {{ pagerfanta(pager, 'twitter_bootstrap', {'routeName': 'web_biblio_userlist'}) }}
+        {{ pagerfanta(pager, 'twitter_bootstrap', {'proximity' : 1, 'routeName': 'web_biblio_userlist'}) }}
     {% endif %}
 
-    {# On boucle sur le pager contenant nos news paginées #}
-    {% for webLink in pager.currentPageResults %}
-         <li>
-            <form method="POST" action="{{ path('web_biblio_remove', { 'id': webLink.id}) }}">
-                <input border="0" title="Delete" src="{{ asset('bundles/icapwebbiblio/images/cancel.png') }}" type="image" value="submit" align="middle" />
-            </form> 
-            {% if webLink.published %}
-            <form method="POST" action="{{ path('web_biblio_publish', { 'id': webLink.id, 'value': '0' }) }}">
-                <input border="0" title="Unpublish" src="{{ asset('bundles/icapwebbiblio/images/accept.png') }}" type="image" value="submit" align="middle" > 
-            {% else %}
-            <form method="POST" action="{{ path('web_biblio_publish', { 'id': webLink.id, 'value': '1' }) }}">
-                <input border="0" title="Publish" src="{{ asset('bundles/icapwebbiblio/images/delete.png') }}" type="image" value="submit" align="middle" > 
-            {% endif %}
-            
-                <a href="{{ webLink.url }}" target="_blank">{{ webLink.url }}</a>
-                <span class="webLinkTags">[
-                {% for tag in webLink.tags %} 
-                    {{ tag.name }}{% if not loop.last %},{% endif %}
-                {% endfor %}
-                ]</span><br/>
 
-            </form>
-        </li>
-    {% else %}
-      <p>Oupss! No web links yet !</p>
-    {% endfor %}
+    <table class="table table-bordered table-striped sonata-ba-list">
+        <tbody>
+            {# On boucle sur le pager contenant nos news paginées #}
+            {% for webLink in pager.currentPageResults %}
+                 <tr>
+                    <td class="table-inline">
+
+                    {# {% if is_granted('EDIT', webLink) or is_granted('ROLE_ADMIN') %} #}
+                        <form method="POST" action="{{ path('web_biblio_remove', { 'id': webLink.id}) }}">
+                            <input border="0" title="Delete" src="{{ asset('bundles/icapwebbiblio/images/cancel.png') }}" type="image" value="submit" align="middle" />
+                        </form> 
+                        {% if webLink.published %}
+                        <form method="POST" action="{{ path('web_biblio_publish', { 'id': webLink.id, 'value': '0' }) }}">
+                            <input border="0" title="Unpublish" src="{{ asset('bundles/icapwebbiblio/images/accept.png') }}" type="image" value="submit" align="middle" > 
+                        {% else %}
+                        <form method="POST" action="{{ path('web_biblio_publish', { 'id': webLink.id, 'value': '1' }) }}">
+                            <input border="0" title="Publish" src="{{ asset('bundles/icapwebbiblio/images/delete.png') }}" type="image" value="submit" align="middle" > 
+                        {% endif %}
+                    {# {% endif %} #}
+                   
+                        <a href="{{ webLink.url }}" target="_blank">{{ webLink.url }}</a>
+                            <span class="webLinkTags">[
+                            {% for tag in webLink.tags %} 
+                                {{ tag.name }}{% if not loop.last %},{% endif %}
+                            {% endfor %}
+                            ]</span>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+              <tr><td>Oupss! No web links yet !</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
     {# On ré-affiche les pages dans un souci d'ergonomie: "Précédent 1 2 3 ... 4 5 Suivant" #}
     {% if pager.haveToPaginate %}

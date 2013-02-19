@@ -1,0 +1,37 @@
+<div class="webLinkCenterBlock">
+    <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register form-horizontal">
+        {{ form_errors(form) }}
+        <div class="control-group">
+            <label class="control-label" for="fos_user_registration_form_username">Login</label>
+            <div class="controls">
+                {{ form_widget(form.username, {'attr': {'class': 'input', 'placeholder': 'login'}}) }}
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="fos_user_registration_form_email">Email</label>
+            <div class="controls">
+                {{ form_widget(form.email, {'attr': {'class': 'input', 'placeholder': 'email'}}) }}
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="fos_user_registration_form_plainPassword_first">Password</label>
+            <div class="controls">
+                {{ form_widget(form.plainPassword.first, {'attr': {'class': 'input', 'placeholder': 'password'}}) }}
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="fos_user_registration_form_plainPassword_second">Confirm password</label>
+            <div class="controls">
+                {{ form_widget(form.plainPassword.second, {'attr': {'class': 'input', 'placeholder': 'confirm password'}}) }}
+            </div>
+        </div>
+
+        {{ form_rest(form) }}
+        <div class="control-group">
+            <label class="control-label"></label>
+            <div class="controls">
+                <input type="submit" value="Create" class="btn" />
+            </div>
+        </div>
+    </form>
+</div>

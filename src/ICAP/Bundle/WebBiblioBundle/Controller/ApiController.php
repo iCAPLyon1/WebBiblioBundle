@@ -23,10 +23,29 @@ class ApiController extends Controller
     {
         $queryParams = $request->query->all();
         $format = isset($queryParams['format'])?$queryParams['format']:"json";
-		$entities = $this->get('icap_webbiblio.manager')->search($queryParams);
+		$entities = $this->get('icap_webbiblio.manager')->searchWeblink($queryParams);
     	$export = $this->get('idci_exporter.manager')->export($entities, $format, $queryParams);
         
 		$response = new Response();
+        $response->setContent($export->getContent());
+        $response->headers->set('Content-Type', $export->getContentType());
+
+        return $response;
+    }
+
+    /**
+     * @Route("/tag", name="web_biblio_api_search_tag")
+     * @Method("GET")
+     * @Template()
+     */
+    public function tagAction(Request $request)
+    {
+        $queryParams = $request->query->all();
+        $format = isset($queryParams['format'])?$queryParams['format']:"json";
+        $entities = $this->get('icap_webbiblio.manager')->searchTag($queryParams);
+        $export = $this->get('idci_exporter.manager')->export($entities, $format, $queryParams);
+        
+        $response = new Response();
         $response->setContent($export->getContent());
         $response->headers->set('Content-Type', $export->getContentType());
 

@@ -169,29 +169,6 @@ class WebLink
     }
 
     /**
-     * TODO: Move this code to formTransformer
-     * Set tags
-     *
-     * @param String $tags
-     * @return WebLink
-     */
-    public function setTags($tagNames)
-    {
-        if($tagNames) {
-            $tags = explode(",", $tagNames);
-            foreach($tags as $tagName){
-                $tag = new Tag();
-                $tag->setName(trim($tagName));
-                $this->addTag($tag);
-            }
-        }else {
-            $this->tags = array();
-        }
-
-        return $this;
-    }
-
-    /**
      * Remove tags
      *
      * @param \ICAP\Bundle\WebBiblioBundle\Entity\Tag $tags
@@ -218,5 +195,15 @@ class WebLink
     public function getTags()
     {
         return $this->tags;
+    }
+
+    /**
+     * to string method
+     *
+     * @return String name
+     */
+    public function __toString()
+    {
+        return $this->url;
     }
 }
