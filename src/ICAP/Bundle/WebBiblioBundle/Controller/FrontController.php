@@ -72,7 +72,7 @@ class FrontController extends Controller
      * @Method({"GET"})
      * @Template()
      */
-    public function userlistAction($page)
+    public function userListAction($page)
     {
         $logger = $this->get('logger');
         $logger->debug('userlistAction()');
